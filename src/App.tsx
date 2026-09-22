@@ -24,7 +24,7 @@ import { PanduanView } from './components/PanduanView';
 
 const MainLayout: React.FC = () => {
   const [activeSection, setActiveSection] = useState<NavSection>('dashboard');
-  const { isAuthenticated } = useApp();
+  const { isAuthenticated, currentUser } = useApp();
 
   // Report Modal State
   const [reportState, setReportState] = useState<{
@@ -134,7 +134,9 @@ const MainLayout: React.FC = () => {
                 {activeSection === 'bmn_laporan' && <LaporanBmnView onOpenReport={handleOpenReport} />}
 
                 {/* Pengaturan Pejabat & Master */}
-                {(activeSection === 'pengaturan' || activeSection === 'admin_master') && <PengaturanView />}
+                {(activeSection === 'pengaturan' || activeSection === 'admin_master') && (
+                  currentUser.role === 'admin' ? <PengaturanView /> : <DashboardView onNavigate={(sec) => setActiveSection(sec)} onOpenReport={() => handleOpenReport('persediaan_bulanan')} />
+                )}
 
                 {/* Modul ROCAN (Surat, Disposisi, Jadwal) */}
                 {activeSection === 'arsip_surat' && <ArsipSuratView />}

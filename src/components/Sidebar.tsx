@@ -82,7 +82,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
       case 'disposisi_monitor': return ['ka_biro', 'ka_bagian', 'petugas_arsip', 'pegawai', 'admin'].includes(role);
       case 'jadwal_kegiatan': return true;
       case 'admin_master': return role === 'admin';
-      case 'pengaturan': return true;
+      case 'pengaturan': return role === 'admin';
       case 'panduan': return true;
       default: return false;
     }

@@ -38,7 +38,7 @@ export const PeminjamanRuangView: React.FC = () => {
   const [keperluan, setKeperluan] = useState('');
 
   const [selectedBooking, setSelectedBooking] = useState<PeminjamanRuang | null>(null);
-  const [actionBmn, setActionBmn] = useState<'setuju' | 'tolak'>('setuju');
+  const [actionBmn, setActionBmn] = useState<'disetujui' | 'ditolak'>('disetujui');
   const [catatanBmn, setCatatanBmn] = useState('');
 
   const [showConfirmClear, setShowConfirmClear] = useState(false);
@@ -99,6 +99,7 @@ export const PeminjamanRuangView: React.FC = () => {
     verifikasiPeminjaman(selectedBooking.id, actionBmn, catatanBmn || 'Diproses');
     setNotifSuccess(`Peminjaman ${selectedBooking.nomorPeminjaman} diperbarui.`);
     setSelectedBooking(null);
+    setCatatanBmn('');
     setTimeout(() => setNotifSuccess(null), 4000);
   };
 
@@ -326,8 +327,8 @@ export const PeminjamanRuangView: React.FC = () => {
                 )}
                 {(booking.status === 'menunggu' || booking.status === 'menunggu_persetujuan') && isPetugasBmn ? (
                   <div className="flex gap-2">
-                    <button onClick={() => { setSelectedBooking(booking); setActionBmn('setuju'); }} className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg">Setuju</button>
-                    <button onClick={() => { setSelectedBooking(booking); setActionBmn('tolak'); }} className="px-3 py-1.5 bg-rose-600 text-white text-xs font-bold rounded-lg">Tolak</button>
+                    <button onClick={() => { setSelectedBooking(booking); setActionBmn('disetujui'); }} className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg">Setuju</button>
+                    <button onClick={() => { setSelectedBooking(booking); setActionBmn('ditolak'); }} className="px-3 py-1.5 bg-rose-600 text-white text-xs font-bold rounded-lg">Tolak</button>
                   </div>
                 ) : (
                   <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${booking.status === 'disetujui' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}`}>
@@ -346,7 +347,7 @@ export const PeminjamanRuangView: React.FC = () => {
       {selectedBooking && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
           <div className={`border rounded-2xl max-w-md w-full p-6 space-y-4 animate-in zoom-in-95 ${themeClasses.card}`}>
-            <h3 className="text-base font-bold">Verifikasi {actionBmn === 'setuju' ? 'Persetujuan' : 'Penolakan'}</h3>
+            <h3 className="text-base font-bold">Verifikasi {actionBmn === 'disetujui' ? 'Persetujuan' : 'Penolakan'}</h3>
             <p className="text-xs text-slate-500">Memberikan keputusan untuk permohonan <strong>{selectedBooking.nomorPeminjaman}</strong></p>
             <textarea 
               rows={3} 
@@ -356,8 +357,8 @@ export const PeminjamanRuangView: React.FC = () => {
               className={`w-full border rounded-lg px-3 py-2 text-xs ${themeClasses.input}`} 
             />
             <div className="flex justify-end gap-2">
-              <button onClick={() => setSelectedBooking(null)} className="px-4 py-2 text-xs text-slate-500">Batal</button>
-              <button onClick={handleExecuteVerification} className={`px-5 py-2 rounded-lg text-xs font-bold text-white ${actionBmn === 'setuju' ? 'bg-emerald-600 shadow-lg shadow-emerald-600/20' : 'bg-rose-600 shadow-lg shadow-rose-600/20'}`}>Konfirmasi</button>
+              <button onClick={() => { setSelectedBooking(null); setCatatanBmn(''); }} className="px-4 py-2 text-xs text-slate-500">Batal</button>
+              <button onClick={handleExecuteVerification} className={`px-5 py-2 rounded-lg text-xs font-bold text-white ${actionBmn === 'disetujui' ? 'bg-emerald-600 shadow-lg shadow-emerald-600/20' : 'bg-rose-600 shadow-lg shadow-rose-600/20'}`}>Konfirmasi</button>
             </div>
           </div>
         </div>
