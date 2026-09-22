@@ -202,6 +202,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
               label="Barang Keluar"
               isActive={activeSection === 'persediaan_keluar'}
             />
+            <NavItem
+              section="persediaan_opname"
+              icon={<FileCheck className="w-4 h-4" />}
+              label="Stock Opname"
+              isActive={activeSection === 'persediaan_opname'}
+            />
+            <NavItem
+              section="persediaan_laporan"
+              icon={<BarChart3 className="w-4 h-4" />}
+              label="Laporan Persediaan"
+              isActive={activeSection === 'persediaan_laporan'}
+            />
           </div>
         </div>
 
@@ -230,6 +242,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
               icon={<CalendarRange className="w-4 h-4" />}
               label="Peminjaman"
               isActive={activeSection === 'bmn_peminjaman'}
+            />
+            <NavItem
+              section="bmn_laporan"
+              icon={<FileSpreadsheet className="w-4 h-4" />}
+              label="Laporan BMN"
+              isActive={activeSection === 'bmn_laporan'}
             />
           </div>
         </div>

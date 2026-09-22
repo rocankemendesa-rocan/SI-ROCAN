@@ -74,7 +74,7 @@ interface AppContextType {
     catatan?: string
   ) => void;
   prosesPengeluaranBarang: (permintaanId: string, catatan?: string) => void;
-  simpanStockOpname: (so: Omit<StockOpnameRecord, 'id'>) => void;
+  addStockOpname: (so: Omit<StockOpnameRecord, 'id'>) => void;
   verifikasiSaktiStockOpname: (soId: string) => void;
   setujuiKasubbagStockOpname: (soId: string, catatan?: string) => void;
 
@@ -412,7 +412,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  const simpanStockOpname = async (so: Omit<StockOpnameRecord, 'id'>) => {
+  const addStockOpname = async (so: Omit<StockOpnameRecord, 'id'>) => {
     const newId = `so-${so.tahun}-${so.periodeBulan.toLowerCase()}-${Date.now()}`;
     await firestoreService.set('stock_opname', newId, { ...so, id: newId });
   };
@@ -639,7 +639,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addPermintaan,
         verifikasiPermintaan,
         prosesPengeluaranBarang,
-        simpanStockOpname,
+        addStockOpname,
         verifikasiSaktiStockOpname,
         setujuiKasubbagStockOpname,
         bmnList,
