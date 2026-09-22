@@ -1,0 +1,264 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User profile and role information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "nip": { "type": "string" },
+        "nik": { "type": "string" },
+        "pin": { "type": "string" },
+        "role": { "type": "string" },
+        "roleTitle": { "type": "string" },
+        "unit": { "type": "string" },
+        "email": { "type": "string" }
+      },
+      "required": ["id", "name", "nip", "role", "pin"]
+    },
+    "InventoryItem": {
+      "title": "Inventory Item",
+      "description": "Stock item in the warehouse",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "kodeBarang": { "type": "string" },
+        "namaBarang": { "type": "string" },
+        "kategori": { "type": "string" },
+        "stok": { "type": "number" },
+        "satuan": { "type": "string" },
+        "lokasi": { "type": "string" },
+        "stokMin": { "type": "number" },
+        "hargaSatuan": { "type": "number" },
+        "keterangan": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "kodeBarang", "namaBarang", "stok", "satuan"]
+    },
+    "BarangMasukItem": {
+      "title": "Incoming Goods",
+      "description": "Record of goods entering the warehouse",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nomorDokumen": { "type": "string" },
+        "tanggal": { "type": "string" },
+        "kodeBarang": { "type": "string" },
+        "namaBarang": { "type": "string" },
+        "jumlah": { "type": "number" },
+        "satuan": { "type": "string" },
+        "lokasi": { "type": "string" },
+        "tandaTiba": { "type": "string" },
+        "sumberPengadaan": { "type": "string" },
+        "petugasGudang": { "type": "string" },
+        "verifikatorSakti": { "type": "string" },
+        "fotoUrl": { "type": "string" },
+        "dokumenUrl": { "type": "string" },
+        "catatan": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "nomorDokumen", "tanggal", "kodeBarang", "jumlah"]
+    },
+    "PermintaanPersediaan": {
+      "title": "Stock Request",
+      "description": "Request for inventory items by staff",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nomorPermintaan": { "type": "string" },
+        "tanggal": { "type": "string" },
+        "namaPemohon": { "type": "string" },
+        "nipPemohon": { "type": "string" },
+        "unitKerja": { "type": "string" },
+        "keperluan": { "type": "string" },
+        "status": { "type": "string" },
+        "catatanKasubbag": { "type": "string" },
+        "disetujuiOleh": { "type": "string" },
+        "tanggalPersetujuan": { "type": "string" },
+        "tanggalPenyerahan": { "type": "string" },
+        "petugasPenyerah": { "type": "string" }
+      },
+      "required": ["id", "nomorPermintaan", "tanggal", "namaPemohon", "status"]
+    },
+    "BarangKeluarRecord": {
+      "title": "Outgoing Goods",
+      "description": "Record of goods released from the warehouse",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nomorPengeluaran": { "type": "string" },
+        "nomorPermintaan": { "type": "string" },
+        "permintaanId": { "type": "string" },
+        "tanggal": { "type": "string" },
+        "namaPenerima": { "type": "string" },
+        "unitKerja": { "type": "string" },
+        "petugasGudang": { "type": "string" },
+        "verifikatorSakti": { "type": "string" },
+        "catatan": { "type": "string" },
+        "dokumenTandaTerima": { "type": "string" }
+      },
+      "required": ["id", "nomorPengeluaran", "tanggal", "namaPenerima"]
+    },
+    "BmnItem": {
+      "title": "BMN Asset",
+      "description": "State-owned asset record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "kodeBarang": { "type": "string" },
+        "nup": { "type": "string" },
+        "namaBarang": { "type": "string" },
+        "merkType": { "type": "string" },
+        "tahunPerolehan": { "type": "number" },
+        "nilaiPerolehan": { "type": "number" },
+        "kondisi": { "type": "string" },
+        "lokasiRuang": { "type": "string" },
+        "pemegangBarang": { "type": "string" },
+        "nipPemegang": { "type": "string" },
+        "statusPenggunaan": { "type": "string" },
+        "fotoUrl": { "type": "string" },
+        "keterangan": { "type": "string" }
+      },
+      "required": ["id", "kodeBarang", "nup", "namaBarang"]
+    },
+    "MutasiBmnRecord": {
+      "title": "BMN Mutation",
+      "description": "Record of BMN asset transfer or status change",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nomorMutasi": { "type": "string" },
+        "tanggal": { "type": "string" },
+        "jenisMutasi": { "type": "string" },
+        "kodeBarang": { "type": "string" },
+        "nup": { "type": "string" },
+        "namaBarang": { "type": "string" },
+        "kondisi": { "type": "string" },
+        "nomorBast": { "type": "string" },
+        "keLokasi": { "type": "string" },
+        "kePemegang": { "type": "string" },
+        "fotoUrl": { "type": "string" },
+        "dokumenUrl": { "type": "string" },
+        "status": { "type": "string" },
+        "petugasBmn": { "type": "string" }
+      },
+      "required": ["id", "nomorMutasi", "tanggal", "kodeBarang"]
+    },
+    "PeminjamanRuang": {
+      "title": "Room & BMN Booking",
+      "description": "Reservation of rooms or BMN portable equipment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nomorPeminjaman": { "type": "string" },
+        "namaPemohon": { "type": "string" },
+        "nipPemohon": { "type": "string" },
+        "unitKerja": { "type": "string" },
+        "jenis": { "type": "string" },
+        "namaRuangan": { "type": "string" },
+        "bmnPortabel": { "type": "array" },
+        "keperluan": { "type": "string" },
+        "tanggalPeminjaman": { "type": "string" },
+        "waktuMulai": { "type": "string" },
+        "waktuSelesai": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "nomorPeminjaman", "namaPemohon", "tanggalPeminjaman"]
+    },
+    "SuratMasuk": {
+      "title": "Incoming Letter",
+      "description": "Record of incoming correspondence",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nomor": { "type": "string" },
+        "asal": { "type": "string" },
+        "perihal": { "type": "string" },
+        "tglSurat": { "type": "string" },
+        "tglDiterima": { "type": "string" },
+        "lampiran": { "type": "string" }
+      },
+      "required": ["id", "nomor", "asal", "perihal", "tglSurat"]
+    },
+    "Disposisi": {
+      "title": "Disposition",
+      "description": "Instruction for incoming letter",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "suratId": { "type": "string" },
+        "suratNo": { "type": "string" },
+        "perihal": { "type": "string" },
+        "kepada": { "type": "string" },
+        "instruksi": { "type": "string" },
+        "sifat": { "type": "string" },
+        "deadline": { "type": "string" },
+        "status": { "type": "string" },
+        "dokumenTindakLanjut": { "type": "string" },
+        "catatanTindakLanjut": { "type": "string" }
+      },
+      "required": ["id", "suratId", "kepada", "status"]
+    },
+    "Kegiatan": {
+      "title": "Activity",
+      "description": "Calendar activity or meeting",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "judul": { "type": "string" },
+        "mulai": { "type": "string" },
+        "selesai": { "type": "string" },
+        "lokasi": { "type": "string" },
+        "deskripsi": { "type": "string" }
+      },
+      "required": ["id", "judul", "mulai", "selesai"]
+    }
+  },
+  "firestore": {
+    "users": {
+      "schema": "UserProfile",
+      "description": "Collection of user profiles and roles"
+    },
+    "inventory": {
+      "schema": "InventoryItem",
+      "description": "Collection of inventory items"
+    },
+    "incoming_goods": {
+      "schema": "BarangMasukItem",
+      "description": "Collection of incoming goods records"
+    },
+    "requests": {
+      "schema": "PermintaanPersediaan",
+      "description": "Collection of stock requests"
+    },
+    "outgoing_goods": {
+      "schema": "BarangKeluarRecord",
+      "description": "Collection of outgoing goods records"
+    },
+    "bmn_assets": {
+      "schema": "BmnItem",
+      "description": "Collection of state-owned assets"
+    },
+    "bmn_mutations": {
+      "schema": "MutasiBmnRecord",
+      "description": "Collection of BMN mutation records"
+    },
+    "room_bookings": {
+      "schema": "PeminjamanRuang",
+      "description": "Collection of room and BMN bookings"
+    },
+    "letters": {
+      "schema": "SuratMasuk",
+      "description": "Collection of incoming letters"
+    },
+    "dispositions": {
+      "schema": "Disposisi",
+      "description": "Collection of dispositions"
+    },
+    "activities": {
+      "schema": "Kegiatan",
+      "description": "Collection of calendar activities"
+    }
+  }
+}

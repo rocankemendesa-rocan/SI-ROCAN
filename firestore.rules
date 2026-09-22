@@ -1,0 +1,136 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helper Functions ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Validation Blueprints
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'name', 'nip', 'role', 'pin']) &&
+             data.id is string && data.name is string && data.nip is string &&
+             data.role is string && data.pin is string;
+    }
+
+    function isValidInventory(data) {
+      return data.keys().hasAll(['id', 'kodeBarang', 'namaBarang', 'stok', 'satuan']) &&
+             data.id is string && data.kodeBarang is string && data.namaBarang is string &&
+             data.stok is number && data.satuan is string;
+    }
+
+    function isValidBmnAsset(data) {
+      return data.keys().hasAll(['id', 'kodeBarang', 'nup', 'namaBarang']) &&
+             data.id is string && data.kodeBarang is string && data.nup is string &&
+             data.namaBarang is string;
+    }
+
+    // --- Collection Matches ---
+
+    // Note: The app currently uses a custom login system (NIP/PIN) and fetches all users on boot.
+    // This requires unauthenticated read access to the 'users' collection.
+    match /users/{userId} {
+      allow read: if true; 
+      allow create: if isValidUser(incoming()) && isValidId(userId);
+      allow update: if isValidUser(incoming());
+      allow delete: if true; // In production, this should be admin-only
+    }
+
+    match /inventory/{itemId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /incoming_goods/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /requests/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /outgoing_goods/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /bmn_assets/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /bmn_mutations/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /bmn_maintenance/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /room_bookings/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /rooms/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /letters/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /dispositions/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /activities/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /pejabat/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /stock_opname/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /metadata/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

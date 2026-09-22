@@ -1,0 +1,8 @@
+{
+  "name": "SI-ROCAN",
+  "description": "Sistem Informasi Biro Perencanaan dan Kerja Sama (ROCAN) - Manajemen BMN, Persediaan, Disposisi, dan Jadwal Kegiatan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
