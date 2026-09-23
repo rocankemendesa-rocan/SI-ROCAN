@@ -88,7 +88,7 @@ const DisposisiMonitorView: React.FC = () => {
 
   const filteredDisposisi = React.useMemo(() => {
     return currentUser.role === 'staf' || currentUser.role === 'pegawai'
-      ? disposisiList.filter(d => d.kepada.toLowerCase().includes(currentUser.name.toLowerCase().split(',')[0]))
+      ? disposisiList.filter(d => (d.kepada || '').toLowerCase().includes((currentUser.name || '').toLowerCase().split(',')[0]))
       : disposisiList;
   }, [disposisiList, currentUser]);
 

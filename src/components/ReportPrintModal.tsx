@@ -215,6 +215,7 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
               #print-paper .text-slate-900 { color: #0f172a !important; }
               #print-paper .text-blue-600 { color: #2563eb !important; }
               #print-paper .text-blue-500 { color: #3b82f6 !important; }
+              #print-paper .text-blue-200 { color: #bfdbfe !important; }
               #print-paper .text-emerald-600 { color: #059669 !important; }
               #print-paper .text-rose-600 { color: #e11d48 !important; }
               #print-paper .text-red-600 { color: #dc2626 !important; }

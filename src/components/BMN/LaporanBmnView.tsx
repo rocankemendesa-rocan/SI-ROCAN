@@ -84,7 +84,7 @@ export const LaporanBmnView: React.FC<LaporanBmnViewProps> = ({ onOpenReport }) 
   };
 
   const filteredBmn = bmnList.filter(
-    (b) => b.namaBarang.toLowerCase().includes(searchTerm.toLowerCase()) || b.nup.includes(searchTerm)
+    (b) => (b.namaBarang || '').toLowerCase().includes(searchTerm.toLowerCase()) || (b.nup || '').includes(searchTerm)
   );
 
   const themeClasses = {

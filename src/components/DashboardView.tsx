@@ -117,7 +117,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
     });
 
     return activities
-      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+      .sort((a, b) => {
+        const dateA = new Date(a.time || '').getTime();
+        const dateB = new Date(b.time || '').getTime();
+        return (isNaN(dateB) ? 0 : dateB) - (isNaN(dateA) ? 0 : dateA);
+      })
       .slice(0, 5);
   }, [barangMasuk, permintaanList, peminjamanList, barangKeluar]);
 
@@ -134,7 +138,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
 
   const sortedKegiatan = useMemo(() => {
     return [...kegiatanList]
-      .sort((a, b) => new Date((a.mulai || '').replace(' ', 'T')).getTime() - new Date((b.mulai || '').replace(' ', 'T')).getTime())
+      .sort((a, b) => {
+        const dateA = new Date((a.mulai || '').replace(' ', 'T')).getTime();
+        const dateB = new Date((b.mulai || '').replace(' ', 'T')).getTime();
+        return (isNaN(dateA) ? 0 : dateA) - (isNaN(dateB) ? 0 : dateB);
+      })
       .slice(0, 4);
   }, [kegiatanList]);
 

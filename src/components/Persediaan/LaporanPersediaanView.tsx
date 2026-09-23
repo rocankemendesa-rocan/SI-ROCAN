@@ -42,8 +42,8 @@ export const LaporanPersediaanView: React.FC<LaporanPersediaanViewProps> = ({ on
     for (let i = 0; i < 12; i++) monthlyStats[i] = 0;
 
     permintaanList.forEach(req => {
-      if (req.status === 'disetujui' || req.status === 'selesai') {
-        const date = new Date(req.tanggalPermintaan);
+      if (req.status === 'disetujui' || req.status === 'selesai' || req.status === 'selesai_diserahkan') {
+        const date = new Date(req.tanggal);
         if (!isNaN(date.getTime())) {
           const monthIdx = date.getMonth();
           const totalItems = req.items.reduce((sum, item) => sum + (item.jumlahDisetujui || item.jumlahDiminta), 0);

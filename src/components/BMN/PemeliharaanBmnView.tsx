@@ -53,8 +53,8 @@ export const PemeliharaanBmnView: React.FC<PemeliharaanBmnViewProps> = ({ onOpen
   const filteredList = pemeliharaanList
     .filter(p => filterStatus === 'all' || p.status === filterStatus)
     .filter(p => 
-      p.nomorTiket.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      p.namaBarang.toLowerCase().includes(searchQuery.toLowerCase())
+      (p.nomorTiket || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+      (p.namaBarang || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
   const getStatusStep = (status: PemeliharaanBmn['status']) => {

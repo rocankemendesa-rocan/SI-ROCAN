@@ -244,9 +244,9 @@ export const PeminjamanRuangView: React.FC = () => {
                       }`}
                     >
                       <div className={`p-2 rounded-lg ${selectedBmnPortabel.includes(item.namaBarang) ? 'bg-cyan-600 text-white' : 'bg-slate-100 text-slate-400'}`}>
-                        {item.namaBarang.toLowerCase().includes('kamera') ? <Camera className="w-3.5 h-3.5" /> : 
-                         item.namaBarang.toLowerCase().includes('proyektor') ? <Monitor className="w-3.5 h-3.5" /> :
-                         item.namaBarang.toLowerCase().includes('mic') || item.namaBarang.toLowerCase().includes('sound') ? <Mic className="w-3.5 h-3.5" /> : <Laptop className="w-3.5 h-3.5" />}
+                        {(item.namaBarang || '').toLowerCase().includes('kamera') ? <Camera className="w-3.5 h-3.5" /> : 
+                         (item.namaBarang || '').toLowerCase().includes('proyektor') ? <Monitor className="w-3.5 h-3.5" /> :
+                         (item.namaBarang || '').toLowerCase().includes('mic') || (item.namaBarang || '').toLowerCase().includes('sound') ? <Mic className="w-3.5 h-3.5" /> : <Laptop className="w-3.5 h-3.5" />}
                       </div>
                       <div className="overflow-hidden">
                         <p className="text-[10px] font-bold text-ink leading-tight truncate">{item.namaBarang}</p>
