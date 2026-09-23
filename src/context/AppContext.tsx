@@ -274,40 +274,48 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // --- Modul Persediaan ---
   const addBarangMasuk = async (item: Omit<BarangMasukItem, 'id' | 'createdAt'>) => {
-    const newId = `bm-${Date.now()}`;
-    const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 16);
-    const newEntry: BarangMasukItem = {
-      ...item,
-      id: newId,
-      createdAt: nowStr,
-    };
-
-    await firestoreService.set('incoming_goods', newId, newEntry);
-
-    // Update inventory stock
-    const invItem = inventory.find((inv) => inv.kodeBarang === item.kodeBarang);
-    if (invItem) {
-      await firestoreService.update('inventory', invItem.id, {
-        stok: invItem.stok + Number(item.jumlah),
-        updatedAt: item.tanggal,
-        lokasi: item.lokasi || invItem.lokasi,
-      });
-    } else {
-      const invId = `inv-${Date.now()}`;
-      const newItem: InventoryItem = {
-        id: invId,
-        kodeBarang: item.kodeBarang,
-        namaBarang: item.namaBarang,
-        kategori: 'Alat Tulis Kantor',
-        stok: Number(item.jumlah),
-        satuan: item.satuan,
-        lokasi: item.lokasi || 'Gudang Lt. 2',
-        stokMin: 10,
-        hargaSatuan: 50000,
-        keterangan: item.catatan || 'Pengadaan barang masuk',
-        updatedAt: item.tanggal,
+    try {
+      const sanitizedKode = item.kodeBarang.trim();
+      const newId = `bm-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 16);
+      
+      const newEntry: BarangMasukItem = {
+        ...item,
+        kodeBarang: sanitizedKode,
+        id: newId,
+        createdAt: nowStr,
       };
-      await firestoreService.set('inventory', invId, newItem);
+
+      await firestoreService.set('incoming_goods', newId, newEntry);
+
+      // Update inventory stock - Use sanitized code
+      const invItem = inventory.find((inv) => inv.kodeBarang === sanitizedKode);
+      if (invItem) {
+        await firestoreService.update('inventory', invItem.id, {
+          stok: invItem.stok + Number(item.jumlah),
+          updatedAt: item.tanggal,
+          lokasi: item.lokasi || invItem.lokasi,
+        });
+      } else {
+        const invId = `inv-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const newItem: InventoryItem = {
+          id: invId,
+          kodeBarang: sanitizedKode,
+          namaBarang: item.namaBarang,
+          kategori: 'Alat Tulis Kantor',
+          stok: Number(item.jumlah),
+          satuan: item.satuan,
+          lokasi: item.lokasi || 'Gudang Lt. 2',
+          stokMin: 10,
+          hargaSatuan: 50000,
+          keterangan: item.catatan || 'Pengadaan barang masuk',
+          updatedAt: item.tanggal,
+        };
+        await firestoreService.set('inventory', invId, newItem);
+      }
+    } catch (error) {
+      console.error('Failed to add barang masuk:', error);
+      throw error;
     }
   };
 

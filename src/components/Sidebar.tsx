@@ -68,10 +68,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, onSelectSection
     if (role === 'admin') return true;
     switch (section) {
       case 'dashboard': return true;
-      case 'persediaan_masuk': return ['petugas_gudang', 'admin'].includes(role);
+      case 'persediaan_masuk': return ['petugas_gudang', 'verifikator_persediaan', 'admin'].includes(role);
       case 'persediaan_minta': return true;
       case 'persediaan_setuju': return ['kasubbag_tu', 'admin'].includes(role);
-      case 'persediaan_keluar': return ['petugas_gudang', 'admin'].includes(role);
+      case 'persediaan_keluar': return ['petugas_gudang', 'verifikator_persediaan', 'admin'].includes(role);
       case 'persediaan_opname': return ['petugas_gudang', 'verifikator_persediaan', 'kasubbag_tu', 'admin'].includes(role);
       case 'persediaan_laporan': return ['ka_biro', 'kasubbag_tu', 'verifikator_persediaan', 'admin'].includes(role);
       case 'bmn_mutasi': return ['petugas_bmn', 'admin'].includes(role);

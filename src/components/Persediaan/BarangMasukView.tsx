@@ -96,12 +96,12 @@ export const BarangMasukView: React.FC<BarangMasukViewProps> = ({ onOpenReport }
     XLSX.writeFile(wb, `Laporan_Persediaan_${activeTab}_${new Date().toISOString().slice(0,10)}.xlsx`);
   };
 
-  const handleImportExcel = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportExcel = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       try {
         const bstr = evt.target?.result;
         const wb = XLSX.read(bstr, { type: 'binary' });
@@ -115,7 +115,7 @@ export const BarangMasukView: React.FC<BarangMasukViewProps> = ({ onOpenReport }
         }
 
         let importedCount = 0;
-        data.forEach((row: any) => {
+        for (const row of (data as any[])) {
           const kode = row['Kode Barang'] || row['kodeBarang'];
           const nama = row['Nama Barang'] || row['namaBarang'];
           const qty = Number(row['Jumlah'] || row['jumlah'] || 0);
@@ -125,7 +125,7 @@ export const BarangMasukView: React.FC<BarangMasukViewProps> = ({ onOpenReport }
             const nomor = `BM/IMPORT/${new Date().getFullYear()}/${String(seq).padStart(4, '0')}`;
             const nowStr = new Date().toISOString().split('T')[0];
 
-            addBarangMasuk({
+            await addBarangMasuk({
               nomorDokumen: nomor,
               tanggal: nowStr,
               kodeBarang: String(kode),
@@ -133,6 +133,7 @@ export const BarangMasukView: React.FC<BarangMasukViewProps> = ({ onOpenReport }
               jumlah: qty,
               satuan: row['Satuan'] || row['satuan'] || 'Pcs',
               lokasi: row['Lokasi'] || row['lokasi'] || 'Gudang Umum',
+              tandaTiba: row['Keterangan'] || row['keterangan'] || 'Import Massal',
               sumberPengadaan: row['Sumber'] || row['sumber'] || 'Import Massal',
               petugasGudang: currentUser.name,
               verifikatorSakti: pejabat.namaVerifikatorSakti,
@@ -140,11 +141,12 @@ export const BarangMasukView: React.FC<BarangMasukViewProps> = ({ onOpenReport }
             });
             importedCount++;
           }
-        });
+        }
 
         setImportStatus({ success: true, message: `Berhasil mengimport ${importedCount} data barang.` });
         setTimeout(() => setImportStatus(null), 5000);
       } catch (err) {
+        console.error('Import error:', err);
         setImportStatus({ success: false, message: 'Gagal membaca file Excel. Pastikan format benar.' });
       }
     };
@@ -152,38 +154,43 @@ export const BarangMasukView: React.FC<BarangMasukViewProps> = ({ onOpenReport }
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!kodeBarang || !namaBarang || jumlah <= 0) return;
 
-    const seq = barangMasuk.length + 1;
-    const nomor = `BM/ROCAN/${new Date().getFullYear()}/${String(new Date().getMonth() + 1).padStart(2, '0')}/${String(seq).padStart(3, '0')}`;
-    const nowStr = new Date().toISOString().split('T')[0];
+    try {
+      const seq = barangMasuk.length + 1;
+      const nomor = `BM/ROCAN/${new Date().getFullYear()}/${String(new Date().getMonth() + 1).padStart(2, '0')}/${String(seq).padStart(3, '0')}`;
+      const nowStr = new Date().toISOString().split('T')[0];
 
-    addBarangMasuk({
-      nomorDokumen: nomor,
-      tanggal: nowStr,
-      kodeBarang,
-      namaBarang,
-      jumlah: Number(jumlah),
-      satuan,
-      lokasi,
-      tandaTiba: tandaTiba || `SJ-${Date.now().toString().slice(-6)}`,
-      sumberPengadaan,
-      petugasGudang: currentUser.role === 'petugas_gudang' ? currentUser.name : pejabat.namaPetugasGudang,
-      verifikatorSakti: pejabat.namaVerifikatorSakti,
-      fotoUrl: fotoUrl || undefined,
-      dokumenUrl: dokumenUrl || undefined,
-      catatan,
-    });
+      await addBarangMasuk({
+        nomorDokumen: nomor,
+        tanggal: nowStr,
+        kodeBarang,
+        namaBarang,
+        jumlah: Number(jumlah),
+        satuan,
+        lokasi,
+        tandaTiba: tandaTiba || `SJ-${Date.now().toString().slice(-6)}`,
+        sumberPengadaan,
+        petugasGudang: currentUser.role === 'petugas_gudang' ? currentUser.name : pejabat.namaPetugasGudang,
+        verifikatorSakti: pejabat.namaVerifikatorSakti,
+        fotoUrl: fotoUrl || undefined,
+        dokumenUrl: dokumenUrl || undefined,
+        catatan,
+      });
 
-    setNotifSuccess(true);
-    setTimeout(() => setNotifSuccess(false), 3000);
-    setKodeBarang('');
-    setNamaBarang('');
-    setFotoUrl('');
-    setDokumenUrl('');
-    setShowForm(false);
+      setNotifSuccess(true);
+      setTimeout(() => setNotifSuccess(false), 3000);
+      setKodeBarang('');
+      setNamaBarang('');
+      setFotoUrl('');
+      setDokumenUrl('');
+      setShowForm(false);
+    } catch (err) {
+      console.error('Save error:', err);
+      alert('Gagal menyimpan data barang masuk. Silakan cek koneksi internet atau hubungi admin.');
+    }
   };
 
   const filteredMasuk = React.useMemo(() => {
@@ -251,33 +258,39 @@ export const BarangMasukView: React.FC<BarangMasukViewProps> = ({ onOpenReport }
             >
               <Download className="w-4 h-4" />
             </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImportExcel}
-              accept=".xlsx, .xls, .csv"
-              className="hidden"
-            />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="p-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-lg shadow-amber-600/20"
-              title="Import dari Excel"
-            >
-              <Upload className="w-4 h-4" />
-            </button>
+            {currentUser.role !== 'verifikator_persediaan' && (
+              <>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImportExcel}
+                  accept=".xlsx, .xls, .csv"
+                  className="hidden"
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-lg shadow-amber-600/20"
+                  title="Import dari Excel"
+                >
+                  <Upload className="w-4 h-4" />
+                </button>
+              </>
+            )}
           </div>
 
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className={`px-6 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 transition-all shadow-lg ${
-              showForm 
-                ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/20' 
-                : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20'
-            }`}
-          >
-            {showForm ? <Plus className="w-4 h-4 rotate-45" /> : <Plus className="w-4 h-4" />}
-            <span>{showForm ? 'Batal Input' : 'Input Barang'}</span>
-          </button>
+          {currentUser.role !== 'verifikator_persediaan' && (
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className={`px-6 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 transition-all shadow-lg ${
+                showForm 
+                  ? 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/20' 
+                  : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20'
+              }`}
+            >
+              {showForm ? <Plus className="w-4 h-4 rotate-45" /> : <Plus className="w-4 h-4" />}
+              <span>{showForm ? 'Batal Input' : 'Input Barang'}</span>
+            </button>
+          )}
         </div>
       </div>
 

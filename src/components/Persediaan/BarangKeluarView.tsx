@@ -26,7 +26,7 @@ export const BarangKeluarView: React.FC<BarangKeluarViewProps> = ({ onOpenReport
     inventory,
     barangKeluar,
     permintaanList,
-    prosesBarangKeluar,
+    prosesPengeluaranBarang,
     currentUser,
     pejabat,
     theme,
@@ -57,39 +57,21 @@ export const BarangKeluarView: React.FC<BarangKeluarViewProps> = ({ onOpenReport
     setCatatanHandover('Barang fisik telah diperiksa bersama pemohon dalam kondisi lengkap dan baik.');
   };
 
-  const handleExecuteHandover = () => {
+  const handleExecuteHandover = async () => {
     if (!selectedReq) return;
 
-    const seq = barangKeluar.length + 1;
-    const nomorPengeluaran = `BK/ROCAN/${new Date().getFullYear()}/${String(new Date().getMonth() + 1).padStart(2, '0')}/${String(seq).padStart(3, '0')}`;
-    const nowStr = new Date().toISOString().split('T')[0];
+    try {
+      await prosesPengeluaranBarang(selectedReq.id, catatanHandover);
 
-    prosesBarangKeluar({
-      nomorPengeluaran,
-      tanggal: nowStr,
-      permintaanId: selectedReq.id,
-      namaPenerima: selectedReq.namaPemohon,
-      nipPenerima: selectedReq.nipPemohon,
-      unitKerja: selectedReq.unitKerja,
-      items: selectedReq.items.map((i) => ({
-        kodeBarang: i.kodeBarang,
-        namaBarang: i.namaBarang,
-        jumlahDisetujui: i.jumlahDisetujui || i.jumlahDiminta,
-        jumlahDiminta: i.jumlahDiminta,
-        satuan: i.satuan,
-      })),
-      petugasGudang:
-        currentUser.role === 'petugas_gudang' ? currentUser.name : pejabat.namaPetugasGudang,
-      verifikatorSakti: pejabat.namaVerifikatorSakti,
-      dokumenTandaTerima: nomorTandaTerima,
-      catatan: catatanHandover,
-    });
-
-    setNotifSuccess(
-      `Barang persediaan berhasil diserahkan kepada ${selectedReq.namaPemohon}! Stok fisik telah dipotong secara otomatis.`
-    );
-    setSelectedReq(null);
-    setTimeout(() => setNotifSuccess(null), 4000);
+      setNotifSuccess(
+        `Barang persediaan berhasil diserahkan kepada ${selectedReq.namaPemohon}! Stok fisik telah dipotong secara otomatis.`
+      );
+      setSelectedReq(null);
+      setTimeout(() => setNotifSuccess(null), 4000);
+    } catch (err) {
+      console.error('Handover error:', err);
+      alert('Gagal memproses serah terima barang. Silakan coba lagi.');
+    }
   };
 
   const filteredRiwayat = barangKeluar.filter(
@@ -210,13 +192,15 @@ export const BarangKeluarView: React.FC<BarangKeluarViewProps> = ({ onOpenReport
                     <span className="font-mono text-xs font-bold text-cyan-600">{req.nomorPermintaan}</span>
                     <div className="text-xs text-slate-500 mt-1">Penerima: <strong className={themeClasses.header}>{req.namaPemohon}</strong></div>
                   </div>
-                  <button
-                    onClick={() => handleOpenHandover(req)}
-                    className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-cyan-600/30 transition-all"
-                  >
-                    <ClipboardCheck className="w-4 h-4" />
-                    <span>Serahkan</span>
-                  </button>
+                  {currentUser.role !== 'verifikator_persediaan' && (
+                    <button
+                      onClick={() => handleOpenHandover(req)}
+                      className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-cyan-600/30 transition-all"
+                    >
+                      <ClipboardCheck className="w-4 h-4" />
+                      <span>Serahkan</span>
+                    </button>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
