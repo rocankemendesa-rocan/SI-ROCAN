@@ -17,6 +17,10 @@ import {
   PackagePlus,
   FileCheck,
   CalendarCheck,
+  Wrench,
+  Archive,
+  ShoppingCart,
+  History,
 } from 'lucide-react';
 
 interface DashboardViewProps {
@@ -178,6 +182,56 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
         </div>
       </div>
 
+      {/* Quick Shortcuts Section */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-slate-900/5 flex items-center justify-center">
+            <Boxes className="w-5 h-5 text-slate-900" />
+          </div>
+          <h3 className="text-lg font-bold tracking-tight text-ink">Akses Cepat</h3>
+        </div>
+
+        <div className="flex flex-wrap gap-4">
+          <ShortcutCard 
+            label="Barang Masuk" 
+            icon={<PackagePlus className="w-5 h-5" />} 
+            onClick={() => onNavigate('persediaan_masuk')}
+            color="emerald"
+            style={{ width: '600px' }}
+          />
+          <ShortcutCard 
+            label="Barang Keluar" 
+            icon={<ArrowUpRight className="w-5 h-5" />} 
+            onClick={() => onNavigate('persediaan_keluar')}
+            color="rose"
+          />
+          <ShortcutCard 
+            label="Permintaan" 
+            icon={<ShoppingCart className="w-5 h-5" />} 
+            onClick={() => onNavigate('persediaan_minta')}
+            color="blue"
+          />
+          <ShortcutCard 
+            label="Perbaikan BMN" 
+            icon={<Wrench className="w-5 h-5" />} 
+            onClick={() => onNavigate('bmn_pemeliharaan')}
+            color="amber"
+          />
+          <ShortcutCard 
+            label="Arsip Surat" 
+            icon={<Archive className="w-5 h-5" />} 
+            onClick={() => onNavigate('arsip_surat')}
+            color="indigo"
+          />
+          <ShortcutCard 
+            label="Jadwal Agenda" 
+            icon={<Calendar className="w-5 h-5" />} 
+            onClick={() => onNavigate('jadwal_kegiatan')}
+            color="purple"
+          />
+        </div>
+      </div>
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
@@ -207,6 +261,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
         />
       </div>
 
+  {/* Quick Shortcuts Section REMOVED FROM HERE */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Side: Agenda & Activity Feed */}
         <div className="lg:col-span-7 space-y-8">
@@ -411,6 +466,38 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
         </div>
       </div>
     </div>
+  );
+};
+
+const ShortcutCard: React.FC<{
+  label: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+  color: string;
+  style?: React.CSSProperties;
+}> = ({ label, icon, onClick, color, style }) => {
+  const colorMap: any = {
+    emerald: 'text-emerald-600 bg-emerald-500/10 group-hover:bg-emerald-600 group-hover:text-white',
+    rose: 'text-rose-600 bg-rose-500/10 group-hover:bg-rose-600 group-hover:text-white',
+    blue: 'text-blue-600 bg-blue-500/10 group-hover:bg-blue-600 group-hover:text-white',
+    amber: 'text-amber-600 bg-amber-500/10 group-hover:bg-amber-600 group-hover:text-white',
+    indigo: 'text-indigo-600 bg-indigo-500/10 group-hover:bg-indigo-600 group-hover:text-white',
+    purple: 'text-purple-600 bg-purple-500/10 group-hover:bg-purple-600 group-hover:text-white',
+  };
+
+  return (
+    <button 
+      onClick={onClick}
+      style={style}
+      className="group p-4 rounded-3xl border border-ink-faint bg-white hover:border-slate-900 transition-all duration-300 flex flex-col items-center gap-3 text-center shadow-sm hover:shadow-md"
+    >
+      <div className={`p-3 rounded-2xl transition-all duration-300 ${colorMap[color]}`}>
+        {icon}
+      </div>
+      <span className="text-[11px] font-black uppercase tracking-wider text-ink-soft group-hover:text-ink transition-colors">
+        {label}
+      </span>
+    </button>
   );
 };
 
