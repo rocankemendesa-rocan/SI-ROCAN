@@ -90,32 +90,37 @@ export const MutasiBmnView: React.FC<MutasiBmnViewProps> = ({ onOpenReport }) =>
     setActiveMainTab('katalog');
   };
 
-  const handleMasterSubmit = (e: React.FormEvent) => {
+  const handleMasterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data = {
-      kodeBarang: kodeBarangM,
-      nup: nupM,
-      namaBarang: namaBarangM,
-      merkType: merkTypeM,
-      kategori: kategoriM,
-      tahunPerolehan: tahunM,
-      nilaiPerolehan: nilaiM,
-      lokasiRuang: lokasiM,
-      pemegangBarang: pemegangM,
-      nipPemegang: nipPemegangM,
-      kondisi: kondisiM,
-      statusPenggunaan: 'Digunakan Sendiri' as const,
-    };
+    try {
+      const data = {
+        kodeBarang: kodeBarangM,
+        nup: nupM,
+        namaBarang: namaBarangM,
+        merkType: merkTypeM,
+        kategori: kategoriM,
+        tahunPerolehan: tahunM,
+        nilaiPerolehan: nilaiM,
+        lokasiRuang: lokasiM,
+        pemegangBarang: pemegangM,
+        nipPemegang: nipPemegangM,
+        kondisi: kondisiM,
+        statusPenggunaan: 'Digunakan Sendiri' as const,
+      };
 
-    if (editingBmnId) {
-      updateBmnItem(editingBmnId, data);
-      setNotifSuccess('Data BMN Master berhasil diperbarui.');
-    } else {
-      addBmnMaster(data);
-      setNotifSuccess('Item BMN baru berhasil ditambahkan ke katalog.');
+      if (editingBmnId) {
+        await updateBmnItem(editingBmnId, data);
+        setNotifSuccess('Data BMN Master berhasil diperbarui.');
+      } else {
+        await addBmnMaster(data);
+        setNotifSuccess('Item BMN baru berhasil ditambahkan ke katalog.');
+      }
+      resetMasterForm();
+      setTimeout(() => setNotifSuccess(null), 4000);
+    } catch (err) {
+      console.error('Error saving BMN:', err);
+      alert('Gagal menyimpan data BMN. Silakan coba lagi.');
     }
-    resetMasterForm();
-    setTimeout(() => setNotifSuccess(null), 4000);
   };
 
   const handleSelectBmn = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -305,6 +310,14 @@ export const MutasiBmnView: React.FC<MutasiBmnViewProps> = ({ onOpenReport }) =>
             <div>
               <label className="text-[10px] font-black text-slate-400 uppercase ml-1">Pemegang Barang</label>
               <input type="text" value={pemegangM} onChange={(e) => setPemegangM(e.target.value)} placeholder="Nama Pegawai" className={`w-full border rounded-lg px-3 py-2 text-xs mt-1 ${themeClasses.input}`} />
+            </div>
+            <div>
+              <label className="text-[10px] font-black text-slate-400 uppercase ml-1">NIP Pemegang</label>
+              <input type="text" value={nipPemegangM} onChange={(e) => setNipPemegangM(e.target.value)} placeholder="NIP Pegawai" className={`w-full border rounded-lg px-3 py-2 text-xs mt-1 ${themeClasses.input}`} />
+            </div>
+            <div>
+              <label className="text-[10px] font-black text-slate-400 uppercase ml-1">Nilai Perolehan (Rp)</label>
+              <input type="number" value={nilaiM} onChange={(e) => setNilaiM(Number(e.target.value))} className={`w-full border rounded-lg px-3 py-2 text-xs mt-1 font-bold ${themeClasses.input}`} />
             </div>
             <div className="md:col-span-3 flex justify-end gap-3 pt-4 border-t">
               <button type="button" onClick={resetMasterForm} className="text-xs font-bold text-slate-400">Batal</button>

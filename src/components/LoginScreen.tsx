@@ -24,21 +24,38 @@ export const LoginScreen: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Filter for the upcoming 7 days (Weekly View)
-  const now = new Date('2026-09-15'); // Current system date for the app context
+  // Dynamic date reference
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
   const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  nextWeek.setHours(23, 59, 59, 999);
 
   const publicJadwalRuang = [...peminjamanList]
+    .filter(b => {
+      const bDate = new Date((b.tanggalPeminjaman || '').replace(' ', 'T'));
+      return !isNaN(bDate.getTime()) && bDate >= now;
+    })
     .sort((a, b) => {
       const dateA = new Date((a.tanggalPeminjaman || '').replace(' ', 'T')).getTime();
       const dateB = new Date((b.tanggalPeminjaman || '').replace(' ', 'T')).getTime();
       return (isNaN(dateA) ? 0 : dateA) - (isNaN(dateB) ? 0 : dateB);
-    });
+    })
+    .slice(0, 5); // Show top 5 upcoming
   
   const publicAgenda = [...kegiatanList]
     .filter(k => {
-      const kDate = new Date(k.mulai.includes(' ') ? k.mulai.replace(' ', 'T') : k.mulai);
-      return !isNaN(kDate.getTime()) && kDate >= now && kDate <= nextWeek;
+      const kStart = new Date(k.mulai.includes(' ') ? k.mulai.replace(' ', 'T') : k.mulai);
+      const kEnd = new Date(k.selesai ? (k.selesai.includes(' ') ? k.selesai.replace(' ', 'T') : k.selesai) : k.mulai);
+      
+      if (isNaN(kStart.getTime())) return false;
+      
+      // Activity is upcoming (starts within next 7 days)
+      const isUpcoming = kStart >= now && kStart <= nextWeek;
+      
+      // Activity is currently ongoing (started before/on now, ends after/on now)
+      const isOngoing = kStart <= now && (isNaN(kEnd.getTime()) || kEnd >= now);
+      
+      return isUpcoming || isOngoing;
     })
     .sort((a, b) => {
       const dateA = new Date(a.mulai.replace(' ', 'T')).getTime();
