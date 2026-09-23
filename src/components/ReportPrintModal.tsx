@@ -330,34 +330,58 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
               <div className="space-y-6 mb-8">
                 <div>
                   <h4 className="font-bold font-sans text-xs uppercase mb-2 text-black">
-                    A. Rekapitulasi Sisa Barang Persediaan Akhir Bulan
+                    A. Rekapitulasi Mutasi Barang Persediaan
                   </h4>
-                  <table className="w-full border-collapse border border-black text-[11px]">
+                  <table className="w-full border-collapse border border-black text-[10px]">
                     <thead>
                       <tr className="bg-gray-100 font-bold font-sans">
-                        <th className="border border-black p-1 text-center w-8">No</th>
-                        <th className="border border-black p-1 text-center">Kode Barang</th>
-                        <th className="border border-black p-1 text-left">Nama Barang</th>
-                        <th className="border border-black p-1 text-center">Kategori</th>
-                        <th className="border border-black p-1 text-center">Sisa Stok</th>
-                        <th className="border border-black p-1 text-center">Satuan</th>
-                        <th className="border border-black p-1 text-right">Harga Satuan (Rp)</th>
-                        <th className="border border-black p-1 text-right">Total Nilai (Rp)</th>
+                        <th className="border border-black p-1 text-center w-8" rowSpan={2}>No</th>
+                        <th className="border border-black p-1 text-left" rowSpan={2}>Nama Barang</th>
+                        <th className="border border-black p-1 text-center" rowSpan={2}>Satuan</th>
+                        <th className="border border-black p-1 text-center" colSpan={4}>Kuantitas</th>
+                        <th className="border border-black p-1 text-right" rowSpan={2}>Harga Satuan (Rp)</th>
+                        <th className="border border-black p-1 text-right" rowSpan={2}>Nilai Akhir (Rp)</th>
+                      </tr>
+                      <tr className="bg-gray-100 font-bold font-sans">
+                        <th className="border border-black p-1 text-center">Awal</th>
+                        <th className="border border-black p-1 text-center">Masuk</th>
+                        <th className="border border-black p-1 text-center">Keluar</th>
+                        <th className="border border-black p-1 text-center">Akhir</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {inventory.map((inv, idx) => (
-                        <tr key={inv.id}>
-                          <td className="border border-black p-1 text-center text-black">{idx + 1}</td>
-                          <td className="border border-black p-1 text-center font-mono text-black">{inv.kodeBarang}</td>
-                          <td className="border border-black p-1 font-sans text-black">{inv.namaBarang}</td>
-                          <td className="border border-black p-1 text-center text-black">{inv.kategori}</td>
-                          <td className="border border-black p-1 text-center font-bold text-black">{inv.stok}</td>
-                          <td className="border border-black p-1 text-center text-black">{inv.satuan}</td>
-                          <td className="border border-black p-1 text-right text-black">{inv.hargaSatuan.toLocaleString('id-ID')}</td>
-                          <td className="border border-black p-1 text-right font-medium text-black">{(inv.stok * inv.hargaSatuan).toLocaleString('id-ID')}</td>
-                        </tr>
-                      ))}
+                      {inventory.map((inv, idx) => {
+                        // Calculate stats for this specific item in the period
+                        const totalMasuk = filteredMasuk
+                          .filter(bm => bm.kodeBarang === inv.kodeBarang)
+                          .reduce((sum, current) => sum + current.jumlah, 0);
+                        
+                        const totalKeluar = filteredKeluar.reduce((sum, bk) => {
+                          const itemQty = bk.items
+                            .filter(it => it.kodeBarang === inv.kodeBarang)
+                            .reduce((s, it) => s + (it.jumlahDisetujui || it.jumlahDiminta), 0);
+                          return sum + itemQty;
+                        }, 0);
+
+                        const stokAwal = inv.stok - totalMasuk + totalKeluar;
+
+                        return (
+                          <tr key={inv.id}>
+                            <td className="border border-black p-1 text-center text-black">{idx + 1}</td>
+                            <td className="border border-black p-1 font-sans text-black">
+                              <div className="font-bold">{inv.namaBarang}</div>
+                              <div className="text-[8px] font-mono opacity-60">{inv.kodeBarang}</div>
+                            </td>
+                            <td className="border border-black p-1 text-center text-black">{inv.satuan}</td>
+                            <td className="border border-black p-1 text-center text-black font-medium">{stokAwal}</td>
+                            <td className="border border-black p-1 text-center text-emerald-600 font-medium">+{totalMasuk}</td>
+                            <td className="border border-black p-1 text-center text-rose-600 font-medium">-{totalKeluar}</td>
+                            <td className="border border-black p-1 text-center font-bold text-black">{inv.stok}</td>
+                            <td className="border border-black p-1 text-right text-black">{inv.hargaSatuan.toLocaleString('id-ID')}</td>
+                            <td className="border border-black p-1 text-right font-bold text-black">{(inv.stok * inv.hargaSatuan).toLocaleString('id-ID')}</td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>

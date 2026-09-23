@@ -12,6 +12,11 @@ import {
   ChevronRight,
   Monitor,
   Camera as CameraIcon,
+  Activity,
+  ArrowUpRight,
+  PackagePlus,
+  FileCheck,
+  CalendarCheck,
 } from 'lucide-react';
 
 interface DashboardViewProps {
@@ -23,12 +28,93 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
   const {
     currentUser,
     inventory,
+    barangMasuk,
     permintaanList,
+    barangKeluar,
     mutasiBmnList,
     disposisiList,
     kegiatanList,
     peminjamanList,
   } = useApp();
+
+  const recentActivities = useMemo(() => {
+    const activities: any[] = [];
+
+    // 1. Barang Masuk
+    barangMasuk.forEach((bm) => {
+      activities.push({
+        id: bm.id,
+        type: 'barang_masuk',
+        title: 'Barang Masuk Baru',
+        description: `${bm.namaBarang} (${bm.jumlah} ${bm.satuan}) diterima di ${bm.lokasi}`,
+        time: bm.createdAt || bm.tanggal,
+        icon: <PackagePlus className="w-4 h-4" />,
+        color: 'bg-emerald-500',
+        nav: 'persediaan_masuk'
+      });
+    });
+
+    // 2. Permintaan Baru
+    permintaanList.forEach((p) => {
+      if (p.status === 'menunggu_verifikasi') {
+        activities.push({
+          id: p.id,
+          type: 'permintaan_baru',
+          title: 'Permintaan Baru',
+          description: `Permintaan dari ${p.namaPemohon} (${p.unitKerja})`,
+          time: p.tanggal,
+          icon: <ClipboardCheck className="w-4 h-4" />,
+          color: 'bg-amber-500',
+          nav: 'persediaan_setuju'
+        });
+      } else if (p.status === 'disetujui') {
+        activities.push({
+          id: p.id + '-approved',
+          type: 'permintaan_disetujui',
+          title: 'Permintaan Disetujui',
+          description: `Permintaan ${p.nomorPermintaan} telah disetujui Kasubbag TU`,
+          time: p.tanggalPersetujuan || p.tanggal,
+          icon: <FileCheck className="w-4 h-4" />,
+          color: 'bg-blue-500',
+          nav: 'persediaan_keluar'
+        });
+      }
+    });
+
+    // 3. Peminjaman Ruang Disetujui
+    peminjamanList.forEach((p) => {
+      if (p.status === 'disetujui') {
+        activities.push({
+          id: p.id,
+          type: 'peminjaman_disetujui',
+          title: 'Peminjaman Disetujui',
+          description: `${p.namaRuangan || 'Ruang Rapat'} untuk agenda ${p.agenda}`,
+          time: p.tanggalPersetujuan || p.tanggalPengajuan || p.tanggalPeminjaman || '',
+          icon: <CalendarCheck className="w-4 h-4" />,
+          color: 'bg-purple-500',
+          nav: 'bmn_peminjaman'
+        });
+      }
+    });
+
+    // 4. Barang Keluar
+    barangKeluar.forEach((bk) => {
+      activities.push({
+        id: bk.id,
+        type: 'barang_keluar',
+        title: 'Penyerahan Barang',
+        description: `Barang diserahkan kepada ${bk.namaPenerima}`,
+        time: bk.tanggal,
+        icon: <ArrowUpRight className="w-4 h-4" />,
+        color: 'bg-rose-500',
+        nav: 'persediaan_keluar'
+      });
+    });
+
+    return activities
+      .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+      .slice(0, 5);
+  }, [barangMasuk, permintaanList, peminjamanList, barangKeluar]);
 
   const upcomingReservations = useMemo(() => {
     return [...peminjamanList]
@@ -121,8 +207,51 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Side: Agenda & Surat */}
+        {/* Left Side: Agenda & Activity Feed */}
         <div className="lg:col-span-7 space-y-8">
+          {/* Recent Activity Feed */}
+          <div className="p-6 rounded-3xl border transition-all bg-white border-ink-faint shadow-sm">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-600/10 flex items-center justify-center">
+                  <Activity className="w-5 h-5 text-amber-600" />
+                </div>
+                <h3 className="text-lg font-bold tracking-tight text-ink">Aktivitas Terkini</h3>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {recentActivities.length === 0 ? (
+                <div className="py-12 text-center border-2 border-dashed border-ink-faint rounded-2xl">
+                  <p className="text-xs text-ink-soft font-medium italic">Belum ada aktivitas tercatat</p>
+                </div>
+              ) : (
+                recentActivities.map((act) => (
+                  <div key={act.id} className="flex gap-4 p-4 rounded-2xl bg-[#f8f9fb] border border-transparent hover:border-ink-faint transition-all group">
+                    <div className={`shrink-0 flex items-center justify-center w-10 h-10 rounded-xl ${act.color} text-white shadow-sm`}>
+                      {act.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-bold text-ink">{act.title}</h4>
+                        <span className="text-[10px] text-ink-soft font-bold">
+                          {new Date(act.time).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                        </span>
+                      </div>
+                      <p className="text-xs text-ink-soft mt-1 leading-relaxed truncate">{act.description}</p>
+                      <button 
+                        onClick={() => onNavigate(act.nav)}
+                        className="mt-2 text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-500 transition-colors flex items-center gap-1"
+                      >
+                        Lihat Detail <ChevronRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
           <div className="p-6 rounded-3xl border transition-all bg-white border-ink-faint shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
@@ -319,3 +448,4 @@ const StatCard: React.FC<{
     </div>
   );
 };
+
