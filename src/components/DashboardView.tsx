@@ -35,6 +35,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
     disposisiList,
     kegiatanList,
     peminjamanList,
+    bmnList,
   } = useApp();
 
   const recentActivities = useMemo(() => {
@@ -194,7 +195,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
         />
         <StatCard 
           label="Total Aset BMN" 
-          value={mutasiBmnList.length} 
+          value={bmnList.length} 
           icon={<Boxes className="w-5 h-5" />}
           color="emerald"
         />

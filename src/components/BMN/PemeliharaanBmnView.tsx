@@ -16,7 +16,7 @@ interface PemeliharaanBmnViewProps {
 }
 
 export const PemeliharaanBmnView: React.FC<PemeliharaanBmnViewProps> = ({ onOpenReport }) => {
-  const { bmnList, pemeliharaanList, addPemeliharaan, updatePemeliharaan, currentUser } = useApp();
+  const { bmnList, pemeliharaanList, addPemeliharaan, verifikasiPemeliharaan, updateStatusPemeliharaan, currentUser } = useApp();
 
   const [showForm, setShowForm] = useState(false);
   const [selectedBmnId, setSelectedBmnId] = useState<string>('');
@@ -76,10 +76,7 @@ export const PemeliharaanBmnView: React.FC<PemeliharaanBmnViewProps> = ({ onOpen
 
   const handleVerify = () => {
     if (!selectedTicket) return;
-    updatePemeliharaan(selectedTicket.id, {
-      status: actionKasubbag === 'setuju' ? 'disetujui' : 'ditolak',
-      catatanKasubbag,
-    });
+    verifikasiPemeliharaan(selectedTicket.id, actionKasubbag, catatanKasubbag);
     setSelectedTicket(null);
     setNotifSuccess(`Tiket ${selectedTicket.nomorTiket} diperbarui.`);
     setTimeout(() => setNotifSuccess(null), 4000);
@@ -87,12 +84,11 @@ export const PemeliharaanBmnView: React.FC<PemeliharaanBmnViewProps> = ({ onOpen
 
   const handleFollowup = () => {
     if (!ticketFollowup) return;
-    updatePemeliharaan(ticketFollowup.id, {
-      status: statusFollowup,
+    updateStatusPemeliharaan(ticketFollowup.id, statusFollowup, {
       vendorBengkel,
       estimasiBiaya,
       biayaRealisasi: statusFollowup === 'selesai' ? biayaRealisasi : undefined,
-      catatanPerbaikan,
+      catatanTeknisi: catatanPerbaikan,
     });
     setTicketFollowup(null);
     setNotifSuccess(`Update tiket ${ticketFollowup.nomorTiket} berhasil.`);
@@ -182,7 +178,7 @@ export const PemeliharaanBmnView: React.FC<PemeliharaanBmnViewProps> = ({ onOpen
                   <button onClick={() => { setSelectedTicket(mtn); setActionKasubbag('tolak'); }} className="px-3 py-1.5 bg-rose-600 text-white text-xs font-bold rounded-lg">Tolak</button>
                 </div>
               )}
-              {(mtn.status === 'disetujui' || mtn.status === 'proses') && isPetugasBmn && (
+              {(mtn.status === 'persetujuan' || mtn.status === 'proses') && isPetugasBmn && (
                 <button onClick={() => { setTicketFollowup(mtn); setStatusFollowup('selesai'); }} className="px-3.5 py-1.5 bg-cyan-600 text-white text-xs font-bold rounded-lg">Tindak Lanjut</button>
               )}
             </div>
