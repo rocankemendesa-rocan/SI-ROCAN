@@ -18,6 +18,7 @@ const JadwalKegiatanView: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentDate] = useState(new Date('2026-09-14'));
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
   
   const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -39,15 +40,27 @@ const JadwalKegiatanView: React.FC = () => {
   ], [kegiatanList, peminjamanList]);
 
   const filteredKegiatan = React.useMemo(() => {
-    return allEvents.filter(k => 
-      k.judul.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      k.lokasi.toLowerCase().includes(searchTerm.toLowerCase())
-    ).sort((a, b) => {
+    return allEvents.filter(k => {
+      const matchSearch = k.judul.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         k.lokasi.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      if (!matchSearch) return false;
+      
+      if (selectedDay !== null) {
+        const dateObj = new Date((k.mulai || '').replace(' ', 'T'));
+        if (isNaN(dateObj.getTime())) return false;
+        return dateObj.getDate() === selectedDay && 
+               dateObj.getMonth() === currentDate.getMonth() && 
+               dateObj.getFullYear() === currentDate.getFullYear();
+      }
+      
+      return true;
+    }).sort((a, b) => {
       const dateA = new Date((a.mulai || '').replace(' ', 'T')).getTime();
       const dateB = new Date((b.mulai || '').replace(' ', 'T')).getTime();
       return (isNaN(dateA) ? 0 : dateA) - (isNaN(dateB) ? 0 : dateB);
     });
-  }, [allEvents, searchTerm]);
+  }, [allEvents, searchTerm, selectedDay, currentDate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,7 +137,14 @@ const JadwalKegiatanView: React.FC = () => {
               <button className="p-2 rounded-lg transition-colors text-ink-soft hover:text-ink">
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <button className="px-3 py-1 text-xs font-bold text-indigo-500 bg-indigo-500/10 rounded-lg">Hari Ini</button>
+              <button 
+                onClick={() => setSelectedDay(null)}
+                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
+                  selectedDay === null ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30' : 'text-indigo-500 bg-indigo-500/10'
+                }`}
+              >
+                Semua Agenda
+              </button>
               <button className="p-2 rounded-lg transition-colors text-ink-soft hover:text-ink">
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -138,27 +158,36 @@ const JadwalKegiatanView: React.FC = () => {
             {calendarDays.map((day, idx) => {
               const events = day ? getEventsForDay(day) : [];
               const isToday = day === 14;
+              const isSelected = day === selectedDay;
+              
               return (
                 <div 
                   key={idx} 
+                  onClick={() => day && setSelectedDay(day === selectedDay ? null : day)}
                   className={`min-h-[100px] rounded-xl border p-2 flex flex-col gap-1 transition-all ${
                     day 
-                      ? isToday 
-                        ? 'bg-indigo-600/10 border-indigo-500'
-                        : `${themeClasses.day} hover:border-slate-500 cursor-pointer`
+                      ? isSelected
+                        ? 'bg-indigo-600 border-indigo-600 shadow-lg shadow-indigo-600/20'
+                        : isToday 
+                          ? 'bg-indigo-600/10 border-indigo-500'
+                          : `${themeClasses.day} hover:border-slate-500 cursor-pointer`
                       : 'border-transparent opacity-0'
                   }`}
                 >
-                  <span className={`text-xs font-bold ${isToday ? 'text-indigo-500' : 'text-slate-400'}`}>{day}</span>
+                  <span className={`text-xs font-bold ${
+                    isSelected ? 'text-white' : isToday ? 'text-indigo-500' : 'text-slate-400'
+                  }`}>{day}</span>
                   <div className="flex flex-col gap-1 overflow-y-auto max-h-[70px]">
                     {events.map(e => (
                       <div 
                         key={e.id} 
                         className={`text-[9px] px-1.5 py-0.5 rounded truncate font-medium ${
-                          (e as any).type === 'ruang' 
-                            ? (e as any).status === 'disetujui' ? 'bg-purple-600' : 'bg-amber-500'
-                            : 'bg-indigo-600'
-                        } text-white`}
+                          isSelected 
+                            ? 'bg-white/20 text-white'
+                            : (e as any).type === 'ruang' 
+                              ? (e as any).status === 'disetujui' ? 'bg-purple-600' : 'bg-amber-500'
+                              : 'bg-indigo-600'
+                        } ${isSelected ? '' : 'text-white'}`}
                       >
                         {e.judul}
                       </div>
@@ -173,7 +202,12 @@ const JadwalKegiatanView: React.FC = () => {
         {/* Agenda List */}
         <div className={`border rounded-2xl flex flex-col shadow-xl overflow-hidden ${themeClasses.card}`}>
           <div className="p-4 border-b flex items-center justify-between bg-slate-50 border-slate-200">
-            <h3 className={`text-sm font-bold uppercase tracking-tight ${themeClasses.header}`}>Daftar Agenda</h3>
+            <div className="flex flex-col">
+              <h3 className={`text-sm font-bold uppercase tracking-tight ${themeClasses.header}`}>Daftar Agenda</h3>
+              {selectedDay && (
+                <span className="text-[10px] font-bold text-indigo-500">Tanggal {selectedDay} September 2026</span>
+              )}
+            </div>
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
               <input 
@@ -211,10 +245,10 @@ const JadwalKegiatanView: React.FC = () => {
                     </span>
                   )}
                 </div>
-                <h4 className={`text-xs font-bold line-clamp-1 ${themeClasses.header}`}>{k.judul}</h4>
+                <h4 className={`text-xs font-bold leading-relaxed ${themeClasses.header}`}>{k.judul}</h4>
                 <div className="flex items-center gap-2 text-[10px] text-slate-400">
                   <MapPin className="w-3 h-3 text-rose-500" />
-                  <span className="truncate">{k.lokasi}</span>
+                  <span className="">{k.lokasi}</span>
                 </div>
               </div>
             ))}

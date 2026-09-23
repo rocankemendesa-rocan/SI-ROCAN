@@ -341,7 +341,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
                           </span>
                        </div>
                        <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-bold truncate group-hover:text-blue-600 transition-colors text-ink">
+                          <h4 className="text-sm font-bold group-hover:text-blue-600 transition-colors text-ink leading-relaxed">
                             {kegiatan.judul}
                           </h4>
                           <div className="flex items-center gap-3 mt-1.5">
@@ -351,7 +351,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
                              </div>
                              <div className="flex items-center gap-1 text-[11px] text-ink-soft font-medium">
                                 <MapPin className="w-3 h-3" />
-                                <span className="truncate max-w-[150px]">{kegiatan.lokasi}</span>
+                                <span className="">{kegiatan.lokasi}</span>
                              </div>
                           </div>
                        </div>

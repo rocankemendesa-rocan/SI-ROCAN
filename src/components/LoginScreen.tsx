@@ -163,7 +163,7 @@ export const LoginScreen: React.FC = () => {
                       </div>
                       <div className="flex items-center gap-2 text-[10px] text-ink-soft">
                         <MapPin className="w-3 h-3 text-rose-500" />
-                        <span className="truncate">{k.lokasi}</span>
+                        <span className="">{k.lokasi}</span>
                       </div>
                     </div>
                   </div>
