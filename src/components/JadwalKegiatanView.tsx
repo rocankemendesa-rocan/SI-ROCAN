@@ -41,8 +41,8 @@ const JadwalKegiatanView: React.FC = () => {
 
   const filteredKegiatan = React.useMemo(() => {
     return allEvents.filter(k => {
-      const matchSearch = k.judul.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         k.lokasi.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchSearch = (k.judul || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (k.lokasi || '').toLowerCase().includes(searchTerm.toLowerCase());
       
       if (!matchSearch) return false;
       

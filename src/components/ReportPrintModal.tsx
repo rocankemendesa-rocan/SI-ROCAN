@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { KemendesLogo } from './KemendesLogo';
-import { Printer, X } from 'lucide-react';
+import { Printer, X, FileDown, Loader2 } from 'lucide-react';
 import { formatDateLong } from '../utils';
+import html2pdf from 'html2pdf.js';
 
 export type ReportType =
   | 'persediaan_masuk'
@@ -43,9 +44,36 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
   } = useApp();
 
   const printRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!printRef.current) return;
+    
+    setIsExporting(true);
+    const element = printRef.current;
+    const title = getReportTitle();
+    const fileName = `${title.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+    const opt: any = {
+      margin: 10,
+      filename: fileName,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    try {
+      await html2pdf().set(opt).from(element).save();
+    } catch (error) {
+      console.error('PDF Export Error:', error);
+      alert('Gagal mengekspor PDF. Silakan gunakan fitur Cetak (Print to PDF) sebagai alternatif.');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const getReportTitle = () => {
@@ -140,12 +168,25 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
 
           <div className="flex items-center gap-2">
             <button
+              onClick={handleDownloadPDF}
+              disabled={isExporting}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isExporting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <FileDown className="w-4 h-4" />
+              )}
+              <span>{isExporting ? 'Memproses...' : 'Unduh PDF'}</span>
+            </button>
+            <button
               id="btn-trigger-print"
               onClick={handlePrint}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-md transition-colors"
+              disabled={isExporting}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-md transition-all disabled:opacity-50"
             >
               <Printer className="w-4 h-4" />
-              <span>Cetak / Cetak ke PDF</span>
+              <span>Cetak</span>
             </button>
             <button
               onClick={onClose}
@@ -158,6 +199,30 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
 
         {/* Printable Paper Area (White paper simulated) */}
         <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-900/60 flex justify-center">
+          <style>
+            {`
+              #print-paper, #print-paper * {
+                color-scheme: light !important;
+                /* Force standard colors for html2canvas compatibility and avoid oklch errors */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
+              #print-paper .text-black { color: #000000 !important; }
+              #print-paper .text-gray-700 { color: #374151 !important; }
+              #print-paper .text-gray-600 { color: #4b5563 !important; }
+              #print-paper .text-gray-500 { color: #6b7280 !important; }
+              #print-paper .text-slate-400 { color: #94a3b8 !important; }
+              #print-paper .text-slate-900 { color: #0f172a !important; }
+              #print-paper .text-blue-600 { color: #2563eb !important; }
+              #print-paper .text-blue-500 { color: #3b82f6 !important; }
+              #print-paper .text-emerald-600 { color: #059669 !important; }
+              #print-paper .text-rose-600 { color: #e11d48 !important; }
+              #print-paper .text-red-600 { color: #dc2626 !important; }
+              #print-paper .bg-gray-100 { background-color: #f3f4f6 !important; }
+              #print-paper .bg-white { background-color: #ffffff !important; }
+              #print-paper .border-black { border-color: #000000 !important; }
+            `}
+          </style>
           <div
             ref={printRef}
             id="print-paper"

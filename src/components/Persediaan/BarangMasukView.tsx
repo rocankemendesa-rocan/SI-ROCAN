@@ -196,17 +196,17 @@ export const BarangMasukView: React.FC<BarangMasukViewProps> = ({ onOpenReport }
   const filteredMasuk = React.useMemo(() => {
     return barangMasuk.filter(
       (bm) =>
-        bm.namaBarang.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        bm.kodeBarang.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        bm.nomorDokumen.toLowerCase().includes(searchTerm.toLowerCase())
+        (bm.namaBarang || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (bm.kodeBarang || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (bm.nomorDokumen || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [barangMasuk, searchTerm]);
 
   const filteredInventory = React.useMemo(() => {
     return inventory.filter(
       (item) =>
-        item.namaBarang.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.kodeBarang.toLowerCase().includes(searchTerm.toLowerCase())
+        (item.namaBarang || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.kodeBarang || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [inventory, searchTerm]);
 

@@ -76,10 +76,10 @@ export const BarangKeluarView: React.FC<BarangKeluarViewProps> = ({ onOpenReport
 
   const filteredRiwayat = barangKeluar.filter(
     (bk) =>
-      bk.nomorPengeluaran.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      bk.namaPenerima.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      bk.unitKerja.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      bk.items.some((i) => i.namaBarang.toLowerCase().includes(searchTerm.toLowerCase()))
+      (bk.nomorPengeluaran || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (bk.namaPenerima || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (bk.unitKerja || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      bk.items.some((i) => (i.namaBarang || '').toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const themeClasses = {

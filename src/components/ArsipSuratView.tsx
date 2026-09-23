@@ -25,9 +25,9 @@ const ArsipSuratView: React.FC = () => {
 
   const filteredSurat = React.useMemo(() => {
     return suratList.filter(s => 
-      s.nomor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.perihal.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.asal.toLowerCase().includes(searchTerm.toLowerCase())
+      (s.nomor || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (s.perihal || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (s.asal || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [suratList, searchTerm]);
 

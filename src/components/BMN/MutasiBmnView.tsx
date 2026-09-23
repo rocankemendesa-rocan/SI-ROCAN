@@ -202,7 +202,7 @@ export const MutasiBmnView: React.FC<MutasiBmnViewProps> = ({ onOpenReport }) =>
 
   const filteredItems = (activeMainTab === 'mutasi' ? mutasiBmnList : bmnList).filter(m => {
     const name = activeMainTab === 'mutasi' ? (m as any).namaBarang : (m as any).namaBarang;
-    const matchSearch = name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchSearch = (name || '').toLowerCase().includes(searchTerm.toLowerCase());
     if (activeMainTab === 'mutasi') {
       const matchJenis = filterJenis === 'all' || (m as any).jenisMutasi === filterJenis;
       return matchSearch && matchJenis;

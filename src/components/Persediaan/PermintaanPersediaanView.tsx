@@ -118,11 +118,11 @@ export const PermintaanPersediaanView: React.FC = () => {
   const filteredPermintaan = React.useMemo(() => {
     return permintaanList.filter((req) => {
       const matchesSearch =
-        req.nomorPermintaan.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        req.namaPemohon.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        req.unitKerja.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        req.keperluan.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        req.items.some((i) => i.namaBarang.toLowerCase().includes(searchTerm.toLowerCase()));
+        (req.nomorPermintaan || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (req.namaPemohon || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (req.unitKerja || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (req.keperluan || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        req.items.some((i) => (i.namaBarang || '').toLowerCase().includes(searchTerm.toLowerCase()));
 
       const matchesStatus = filterStatus === 'all' || req.status === filterStatus;
 

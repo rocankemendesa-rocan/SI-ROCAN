@@ -76,7 +76,7 @@ const MainLayout: React.FC = () => {
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
         {/* Top Navbar (Header in Variation 8) */}
         <Navbar
-          onNavigateToSettings={() => setActiveSection('pengaturan')}
+          onNavigate={(sec) => setActiveSection(sec)}
         />
 
         {/* Dynamic Main View Area (Content in Variation 8) */}
