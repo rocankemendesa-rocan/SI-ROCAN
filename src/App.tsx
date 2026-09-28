@@ -21,6 +21,7 @@ import ArsipSuratView from './components/ArsipSuratView';
 import DisposisiMonitorView from './components/DisposisiMonitorView';
 import JadwalKegiatanView from './components/JadwalKegiatanView';
 import { PanduanView } from './components/PanduanView';
+import { NotificationSystem } from './components/NotificationSystem';
 
 const MainLayout: React.FC = () => {
   const [activeSection, setActiveSection] = useState<NavSection>('dashboard');
@@ -66,6 +67,7 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-row font-geist selection:bg-blue-600 selection:text-white transition-colors duration-300 relative overflow-hidden bg-[#f8f9fb] text-ink">
+      <NotificationSystem />
       {/* Global Background Ornaments */}
       <div className="absolute inset-0 bg-abstract-dots opacity-[0.05] pointer-events-none" />
       

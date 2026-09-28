@@ -421,7 +421,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addStockOpname = async (so: Omit<StockOpnameRecord, 'id'>) => {
-    const newId = `so-${so.tahun}-${so.periodeBulan.toLowerCase()}-${Date.now()}`;
+    const newId = `so-${so.tahun}-${(so.periodeBulan || 'maret').toLowerCase()}-${Date.now()}`;
     await firestoreService.set('stock_opname', newId, { ...so, id: newId });
   };
 

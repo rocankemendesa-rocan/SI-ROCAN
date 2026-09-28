@@ -161,7 +161,7 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
             <div>
               <h3 className="text-sm font-bold text-slate-900">Pratinjau Dokumen Cetak Kedinasan</h3>
               <p className="text-[11px] text-slate-400">
-                Format standar naskah dinas Kementerian Desa & PDTT
+                Format standar naskah dinas Kementerian Desa & PDT
               </p>
             </div>
           </div>
@@ -207,21 +207,60 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
               }
-              #print-paper .text-black { color: #000000 !important; }
+              /* Explicitly map common Tailwind colors used in the app to HEX/RGB to avoid oklch parse errors in html2canvas */
+              #print-paper .text-black, #print-paper { color: #000000 !important; }
+              #print-paper .text-white { color: #ffffff !important; }
+              #print-paper .text-gray-900 { color: #111827 !important; }
+              #print-paper .text-gray-800 { color: #1f2937 !important; }
               #print-paper .text-gray-700 { color: #374151 !important; }
               #print-paper .text-gray-600 { color: #4b5563 !important; }
               #print-paper .text-gray-500 { color: #6b7280 !important; }
-              #print-paper .text-slate-400 { color: #94a3b8 !important; }
+              #print-paper .text-gray-400 { color: #9ca3af !important; }
               #print-paper .text-slate-900 { color: #0f172a !important; }
+              #print-paper .text-slate-800 { color: #1e293b !important; }
+              #print-paper .text-slate-700 { color: #334155 !important; }
+              #print-paper .text-slate-600 { color: #475569 !important; }
+              #print-paper .text-slate-500 { color: #64748b !important; }
+              #print-paper .text-slate-400 { color: #94a3b8 !important; }
+              #print-paper .text-blue-900 { color: #1e3a8a !important; }
+              #print-paper .text-blue-800 { color: #1e40af !important; }
+              #print-paper .text-blue-700 { color: #1d4ed8 !important; }
               #print-paper .text-blue-600 { color: #2563eb !important; }
               #print-paper .text-blue-500 { color: #3b82f6 !important; }
               #print-paper .text-blue-200 { color: #bfdbfe !important; }
+              #print-paper .text-emerald-700 { color: #047857 !important; }
               #print-paper .text-emerald-600 { color: #059669 !important; }
+              #print-paper .text-emerald-500 { color: #10b981 !important; }
+              #print-paper .text-rose-700 { color: #be123c !important; }
               #print-paper .text-rose-600 { color: #e11d48 !important; }
+              #print-paper .text-red-700 { color: #b91c1c !important; }
               #print-paper .text-red-600 { color: #dc2626 !important; }
-              #print-paper .bg-gray-100 { background-color: #f3f4f6 !important; }
+              
+              /* Backgrounds */
               #print-paper .bg-white { background-color: #ffffff !important; }
+              #print-paper .bg-gray-50 { background-color: #f9fafb !important; }
+              #print-paper .bg-gray-100 { background-color: #f3f4f6 !important; }
+              #print-paper .bg-slate-50 { background-color: #f8fafc !important; }
+              #print-paper .bg-slate-100 { background-color: #f1f5f9 !important; }
+              #print-paper .bg-emerald-50 { background-color: #ecfdf5 !important; }
+              #print-paper .bg-rose-50 { background-color: #fff1f2 !important; }
+              
+              /* Borders */
               #print-paper .border-black { border-color: #000000 !important; }
+              #print-paper .border-gray-200 { border-color: #e5e7eb !important; }
+              #print-paper .border-gray-300 { border-color: #d1d5db !important; }
+              #print-paper .border-slate-200 { border-color: #e2e8f0 !important; }
+              
+              /* Print Layout */
+              @media print {
+                body { margin: 0; padding: 0; }
+                #print-paper { 
+                  box-shadow: none !important; 
+                  margin: 0 !important;
+                  width: 100% !important;
+                  max-width: none !important;
+                }
+              }
             `}
           </style>
           <div
