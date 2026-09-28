@@ -21,7 +21,20 @@ import {
   Archive,
   ShoppingCart,
   History,
+  TrendingUp,
 } from 'lucide-react';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  BarChart,
+  Bar,
+  Legend,
+} from 'recharts';
 
 interface DashboardViewProps {
   onNavigate: (section: NavSection) => void;
@@ -41,6 +54,35 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
     peminjamanList,
     bmnList,
   } = useApp();
+
+  const chartData = useMemo(() => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
+    const currentYear = new Date().getFullYear();
+    
+    const data = months.map((month, index) => {
+      // Filter Persediaan Keluar
+      const outgoingCount = barangKeluar.filter(bk => {
+        const d = new Date(bk.tanggal);
+        return d.getMonth() === index && d.getFullYear() === currentYear;
+      }).length;
+
+      // Filter Mutasi BMN
+      const mutationCount = mutasiBmnList.filter(m => {
+        const d = new Date(m.tanggal);
+        return d.getMonth() === index && d.getFullYear() === currentYear;
+      }).length;
+
+      return {
+        name: month,
+        persediaan: outgoingCount,
+        bmn: mutationCount,
+      };
+    });
+
+    // Only return up to current month + maybe one future month or just last 6 months
+    const currentMonth = new Date().getMonth();
+    return data.slice(Math.max(0, currentMonth - 5), currentMonth + 1);
+  }, [barangKeluar, mutasiBmnList]);
 
   const recentActivities = useMemo(() => {
     const activities: any[] = [];
@@ -279,6 +321,106 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
           icon={<Mail className="w-5 h-5" />}
           color="indigo"
         />
+      </div>
+
+      {/* Usage Trends Section */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-blue-600/10 flex items-center justify-center">
+            <TrendingUp className="w-5 h-5 text-blue-600" />
+          </div>
+          <h3 className="text-lg font-bold tracking-tight text-ink">Tren Penggunaan & Mutasi</h3>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="p-6 rounded-3xl border bg-white border-ink-faint shadow-sm h-[350px]">
+            <h4 className="text-xs font-black text-ink-soft uppercase tracking-widest mb-6">Tren Bulanan Persediaan & BMN</h4>
+            <div className="h-[250px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorPersediaan" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorBmn" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis 
+                    dataKey="name" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 10, fontWeight: 600, fill: '#64748b' }} 
+                    dy={10}
+                  />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 10, fontWeight: 600, fill: '#64748b' }} 
+                  />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }}
+                    cursor={{ stroke: '#e2e8f0', strokeWidth: 2 }}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="persediaan" 
+                    stroke="#2563eb" 
+                    strokeWidth={3}
+                    fillOpacity={1} 
+                    fill="url(#colorPersediaan)" 
+                    name="Persediaan Keluar"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="bmn" 
+                    stroke="#10b981" 
+                    strokeWidth={3}
+                    fillOpacity={1} 
+                    fill="url(#colorBmn)" 
+                    name="Mutasi BMN"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="p-6 rounded-3xl border bg-white border-ink-faint shadow-sm h-[350px]">
+            <h4 className="text-xs font-black text-ink-soft uppercase tracking-widest mb-6">Perbandingan Volume Aktivitas</h4>
+            <div className="h-[250px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis 
+                    dataKey="name" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 10, fontWeight: 600, fill: '#64748b' }} 
+                    dy={10}
+                  />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 10, fontWeight: 600, fill: '#64748b' }} 
+                  />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }}
+                    cursor={{ fill: '#f8f9fb' }}
+                  />
+                  <Legend 
+                    wrapperStyle={{ paddingTop: '20px', fontSize: '10px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+                    iconType="circle"
+                  />
+                  <Bar dataKey="persediaan" fill="#2563eb" radius={[4, 4, 0, 0]} name="Barang Keluar" />
+                  <Bar dataKey="bmn" fill="#10b981" radius={[4, 4, 0, 0]} name="Mutasi Aset" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
       </div>
 
   {/* Quick Shortcuts Section REMOVED FROM HERE */}

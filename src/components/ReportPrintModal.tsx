@@ -266,43 +266,51 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
           <div
             ref={printRef}
             id="print-paper"
-            className="w-full max-w-4xl bg-white text-black p-8 md:p-12 shadow-2xl rounded-sm font-serif print:p-0 print:shadow-none print:w-full print:max-w-none text-xs leading-relaxed"
+            className="w-full max-w-4xl bg-white text-black p-8 md:p-14 shadow-2xl rounded-sm font-tahoma print:p-0 print:shadow-none print:w-full print:max-w-none text-[11px] leading-relaxed"
           >
-            {/* Kop Surat Resmi */}
-            <div className="relative flex items-center justify-center pb-1">
-              <div className="absolute left-0">
-                <img src="/logo_official.jpg" alt="Logo Kemendes" className="w-[90px] h-[90px] object-contain" />
+            {/* Kop Surat Resmi - Proportional Tahoma Styling */}
+            <div className="flex items-center pb-2 min-h-[100px]">
+              <div className="w-[100px] flex-shrink-0 flex items-center justify-center">
+                <img 
+                  src="/logo_official.jpg" 
+                  alt="Logo Kemendes" 
+                  className="w-[85px] h-auto max-h-[90px] object-contain" 
+                />
               </div>
-              <div className="text-center px-4">
-                <h2 className="text-[13.5px] font-medium tracking-normal font-sans text-black leading-snug">
-                  KEMENTERIAN DESA DAN PEMBANGUNAN DAERAH TERTINGGAL REPUBLIK INDONESIA
+              <div className="flex-1 text-center pr-[100px]">
+                <h2 className="text-[14px] font-bold tracking-tight text-black leading-tight uppercase">
+                  KEMENTERIAN DESA DAN PEMBANGUNAN DAERAH TERTINGGAL
                 </h2>
-                <h1 className="text-[17px] font-bold uppercase tracking-normal font-sans text-black leading-snug">
+                <h2 className="text-[14px] font-bold tracking-tight text-black leading-tight uppercase">
+                  REPUBLIK INDONESIA
+                </h2>
+                <h1 className="text-[19px] font-bold uppercase tracking-normal text-black leading-tight mt-1">
                   SEKRETARIAT JENDERAL
                 </h1>
-                <p className="text-[10.5px] font-sans text-black leading-snug mt-0.5">
+                <p className="text-[10px] font-normal text-black leading-normal mt-1.5">
                   Jalan TMP. Kalibata Nomor 17 Jakarta Selatan 12750 Telepon 021 – 7989925
                 </p>
-                <p className="text-[10.5px] font-sans text-blue-700 underline leading-snug">
+                <p className="text-[10px] font-normal text-blue-800 underline leading-normal">
                   www.kemendesa.go.id
                 </p>
               </div>
             </div>
-            <div className="border-b-[2.5px] border-black mt-1"></div>
-            <div className="border-b border-black mt-[1.5px] mb-6"></div>
+
+            <div className="border-b-[3px] border-black"></div>
+            <div className="border-b-[1px] border-black mt-[1.5px] mb-8"></div>
 
             {/* Judul Laporan */}
-            <div className="text-center mb-6 font-sans">
-              <h3 className="text-sm font-bold uppercase tracking-wider underline text-black">
+            <div className="text-center mb-8">
+              <h3 className="text-[13px] font-bold uppercase tracking-wider underline text-black">
                 {getReportTitle()}
               </h3>
               {(reportType === 'persediaan_masuk' || reportType === 'persediaan_keluar') && (
-                <p className="text-[11px] text-gray-700 mt-1">
+                <p className="text-[11px] font-bold text-gray-800 mt-1">
                   Periode: {formatDateLong(startDate)} s.d. {formatDateLong(endDate)}
                 </p>
               )}
               {reportType === 'stock_opname' && (
-                <p className="text-[11px] text-gray-700 mt-1">
+                <p className="text-[11px] font-bold text-gray-800 mt-1">
                   Tanggal Pelaksanaan: {formatDateLong(latestSO.tanggalPelaksanaan)}
                 </p>
               )}
@@ -310,37 +318,37 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
 
             {/* Konten Laporan berdasarkan reportType */}
             {reportType === 'persediaan_masuk' && (
-              <table className="w-full border-collapse border border-black text-[11px] mb-8">
+              <table className="w-full border-collapse border border-black text-[10.5px] mb-8">
                 <thead>
-                  <tr className="bg-gray-100 font-bold font-sans">
-                    <th className="border border-black p-1.5 text-center w-8">No</th>
-                    <th className="border border-black p-1.5 text-center">No. Dokumen</th>
-                    <th className="border border-black p-1.5 text-center">Tanggal</th>
-                    <th className="border border-black p-1.5 text-center">Kode Barang</th>
-                    <th className="border border-black p-1.5 text-left">Nama Barang</th>
-                    <th className="border border-black p-1.5 text-center">Jumlah</th>
-                    <th className="border border-black p-1.5 text-center">Satuan</th>
-                    <th className="border border-black p-1.5 text-left">Lokasi Simpan</th>
+                  <tr className="bg-gray-100 font-bold">
+                    <th className="border border-black p-2 text-center w-8">No</th>
+                    <th className="border border-black p-2 text-center">No. Dokumen</th>
+                    <th className="border border-black p-2 text-center">Tanggal</th>
+                    <th className="border border-black p-2 text-center">Kode Barang</th>
+                    <th className="border border-black p-2 text-left">Nama Barang</th>
+                    <th className="border border-black p-2 text-center">Jumlah</th>
+                    <th className="border border-black p-2 text-center">Satuan</th>
+                    <th className="border border-black p-2 text-left">Lokasi Simpan</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredMasuk.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="border border-black p-4 text-center text-gray-500">
+                      <td colSpan={8} className="border border-black p-6 text-center text-gray-500 italic">
                         Tidak ada transaksi barang masuk pada periode ini.
                       </td>
                     </tr>
                   ) : (
                     filteredMasuk.map((bm, idx) => (
                       <tr key={bm.id}>
-                        <td className="border border-black p-1.5 text-center">{idx + 1}</td>
-                        <td className="border border-black p-1.5 text-center font-mono">{bm.nomorDokumen}</td>
-                        <td className="border border-black p-1.5 text-center">{formatDateLong(bm.tanggal)}</td>
-                        <td className="border border-black p-1.5 text-center font-mono">{bm.kodeBarang}</td>
-                        <td className="border border-black p-1.5 font-sans font-medium">{bm.namaBarang}</td>
-                        <td className="border border-black p-1.5 text-center font-bold">{bm.jumlah}</td>
-                        <td className="border border-black p-1.5 text-center">{bm.satuan}</td>
-                        <td className="border border-black p-1.5">{bm.lokasi}</td>
+                        <td className="border border-black p-2 text-center">{idx + 1}</td>
+                        <td className="border border-black p-2 text-center font-mono">{bm.nomorDokumen}</td>
+                        <td className="border border-black p-2 text-center">{formatDateLong(bm.tanggal)}</td>
+                        <td className="border border-black p-2 text-center font-mono">{bm.kodeBarang}</td>
+                        <td className="border border-black p-2 font-bold">{bm.namaBarang}</td>
+                        <td className="border border-black p-2 text-center font-bold">{bm.jumlah}</td>
+                        <td className="border border-black p-2 text-center">{bm.satuan}</td>
+                        <td className="border border-black p-2">{bm.lokasi}</td>
                       </tr>
                     ))
                   )}
@@ -349,34 +357,34 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
             )}
 
             {reportType === 'persediaan_keluar' && (
-              <table className="w-full border-collapse border border-black text-[11px] mb-8">
+              <table className="w-full border-collapse border border-black text-[10.5px] mb-8">
                 <thead>
-                  <tr className="bg-gray-100 font-bold font-sans">
-                    <th className="border border-black p-1.5 text-center w-8">No</th>
-                    <th className="border border-black p-1.5 text-center">No. Pengeluaran</th>
-                    <th className="border border-black p-1.5 text-center">Tanggal</th>
-                    <th className="border border-black p-1.5 text-left">Nama Pemohon / Penerima</th>
-                    <th className="border border-black p-1.5 text-left">Unit Kerja</th>
-                    <th className="border border-black p-1.5 text-left">Daftar Barang Diserahkan</th>
+                  <tr className="bg-gray-100 font-bold">
+                    <th className="border border-black p-2 text-center w-8">No</th>
+                    <th className="border border-black p-2 text-center">No. Pengeluaran</th>
+                    <th className="border border-black p-2 text-center">Tanggal</th>
+                    <th className="border border-black p-2 text-left">Nama Pemohon / Penerima</th>
+                    <th className="border border-black p-2 text-left">Unit Kerja</th>
+                    <th className="border border-black p-2 text-left">Daftar Barang Diserahkan</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredKeluar.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="border border-black p-4 text-center text-gray-500">
+                      <td colSpan={6} className="border border-black p-6 text-center text-gray-500 italic">
                         Tidak ada transaksi barang keluar pada periode ini.
                       </td>
                     </tr>
                   ) : (
                     filteredKeluar.map((bk, idx) => (
                       <tr key={bk.id}>
-                        <td className="border border-black p-1.5 text-center">{idx + 1}</td>
-                        <td className="border border-black p-1.5 text-center font-mono">{bk.nomorPengeluaran}</td>
-                        <td className="border border-black p-1.5 text-center">{formatDateLong(bk.tanggal)}</td>
-                        <td className="border border-black p-1.5 font-bold font-sans">{bk.namaPenerima}</td>
-                        <td className="border border-black p-1.5">{bk.unitKerja}</td>
-                        <td className="border border-black p-1.5">
-                          <ul className="list-disc pl-4">
+                        <td className="border border-black p-2 text-center">{idx + 1}</td>
+                        <td className="border border-black p-2 text-center font-mono">{bk.nomorPengeluaran}</td>
+                        <td className="border border-black p-2 text-center">{formatDateLong(bk.tanggal)}</td>
+                        <td className="border border-black p-2 font-bold">{bk.namaPenerima}</td>
+                        <td className="border border-black p-2">{bk.unitKerja}</td>
+                        <td className="border border-black p-2">
+                          <ul className="list-disc pl-4 space-y-0.5">
                             {bk.items.map((it, i) => (
                               <li key={i}>
                                 {it.namaBarang} : <strong>{it.jumlahDisetujui || it.jumlahDiminta}</strong>{' '}
@@ -393,40 +401,40 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
             )}
 
             {reportType === 'stock_opname' && (
-              <div className="space-y-4 mb-8">
-                <p className="text-[11px] leading-relaxed text-black">
+              <div className="space-y-5 mb-8 text-[11px]">
+                <p className="leading-relaxed text-black">
                   Pada hari ini, tanggal <strong>{formatDateLong(latestSO.tanggalPelaksanaan)}</strong>, telah dilaksanakan
                   pemeriksaan fisik (Stock Opname) terhadap barang-barang persediaan pada Gudang Biro
                   Perencanaan dan Kerja Sama dengan rincian perbandingan catatan sistem SAKTI dan kondisi fisik
                   sebagai berikut:
                 </p>
 
-                <table className="w-full border-collapse border border-black text-[11px]">
+                <table className="w-full border-collapse border border-black text-[10.5px]">
                   <thead>
-                    <tr className="bg-gray-100 font-bold font-sans">
-                      <th className="border border-black p-1.5 text-center w-8">No</th>
-                      <th className="border border-black p-1.5 text-center">Kode Barang</th>
-                      <th className="border border-black p-1.5 text-left">Nama Barang</th>
-                      <th className="border border-black p-1.5 text-center">Satuan</th>
-                      <th className="border border-black p-1.5 text-center">Stok Sistem</th>
-                      <th className="border border-black p-1.5 text-center">Stok Fisik</th>
-                      <th className="border border-black p-1.5 text-center">Selisih</th>
-                      <th className="border border-black p-1.5 text-left">Keterangan</th>
+                    <tr className="bg-gray-100 font-bold">
+                      <th className="border border-black p-2 text-center w-8">No</th>
+                      <th className="border border-black p-2 text-center">Kode Barang</th>
+                      <th className="border border-black p-2 text-left">Nama Barang</th>
+                      <th className="border border-black p-2 text-center">Satuan</th>
+                      <th className="border border-black p-2 text-center">Stok Sistem</th>
+                      <th className="border border-black p-2 text-center">Stok Fisik</th>
+                      <th className="border border-black p-2 text-center">Selisih</th>
+                      <th className="border border-black p-2 text-left">Keterangan</th>
                     </tr>
                   </thead>
                   <tbody>
                     {latestSO.items.map((item, idx) => (
                       <tr key={idx}>
-                        <td className="border border-black p-1.5 text-center text-black">{idx + 1}</td>
-                        <td className="border border-black p-1.5 text-center font-mono text-black">{item.kodeBarang}</td>
-                        <td className="border border-black p-1.5 font-sans text-black">{item.namaBarang}</td>
-                        <td className="border border-black p-1.5 text-center text-black">{item.satuan}</td>
-                        <td className="border border-black p-1.5 text-center font-semibold text-black">{item.stokSistem}</td>
-                        <td className="border border-black p-1.5 text-center font-semibold text-black">{item.stokFisik}</td>
-                        <td className={`border border-black p-1.5 text-center font-bold ${item.selisih !== 0 ? 'text-red-600' : 'text-gray-800'}`}>
+                        <td className="border border-black p-2 text-center text-black">{idx + 1}</td>
+                        <td className="border border-black p-2 text-center font-mono text-black">{item.kodeBarang}</td>
+                        <td className="border border-black p-2 font-bold text-black">{item.namaBarang}</td>
+                        <td className="border border-black p-2 text-center text-black">{item.satuan}</td>
+                        <td className="border border-black p-2 text-center font-semibold text-black">{item.stokSistem}</td>
+                        <td className="border border-black p-2 text-center font-semibold text-black">{item.stokFisik}</td>
+                        <td className={`border border-black p-2 text-center font-bold ${item.selisih !== 0 ? 'text-red-700' : 'text-gray-800'}`}>
                           {item.selisih > 0 ? `+${item.selisih}` : item.selisih}
                         </td>
-                        <td className="border border-black p-1.5 text-black">{item.keterangan || 'Cocok'}</td>
+                        <td className="border border-black p-2 text-black italic text-[10px]">{item.keterangan || 'Cocok'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -437,29 +445,28 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
             {reportType === 'persediaan_bulanan' && (
               <div className="space-y-6 mb-8">
                 <div>
-                  <h4 className="font-bold font-sans text-xs uppercase mb-2 text-black">
+                  <h4 className="font-bold text-[11px] uppercase mb-3 text-black">
                     A. Rekapitulasi Mutasi Barang Persediaan
                   </h4>
                   <table className="w-full border-collapse border border-black text-[10px]">
                     <thead>
-                      <tr className="bg-gray-100 font-bold font-sans">
-                        <th className="border border-black p-1 text-center w-8" rowSpan={2}>No</th>
-                        <th className="border border-black p-1 text-left" rowSpan={2}>Nama Barang</th>
-                        <th className="border border-black p-1 text-center" rowSpan={2}>Satuan</th>
-                        <th className="border border-black p-1 text-center" colSpan={4}>Kuantitas</th>
-                        <th className="border border-black p-1 text-right" rowSpan={2}>Harga Satuan (Rp)</th>
-                        <th className="border border-black p-1 text-right" rowSpan={2}>Nilai Akhir (Rp)</th>
+                      <tr className="bg-gray-100 font-bold">
+                        <th className="border border-black p-2 text-center w-8" rowSpan={2}>No</th>
+                        <th className="border border-black p-2 text-left" rowSpan={2}>Nama Barang</th>
+                        <th className="border border-black p-2 text-center" rowSpan={2}>Satuan</th>
+                        <th className="border border-black p-2 text-center" colSpan={4}>Kuantitas</th>
+                        <th className="border border-black p-2 text-right" rowSpan={2}>Harga Satuan (Rp)</th>
+                        <th className="border border-black p-2 text-right" rowSpan={2}>Nilai Akhir (Rp)</th>
                       </tr>
-                      <tr className="bg-gray-100 font-bold font-sans">
-                        <th className="border border-black p-1 text-center">Awal</th>
-                        <th className="border border-black p-1 text-center">Masuk</th>
-                        <th className="border border-black p-1 text-center">Keluar</th>
-                        <th className="border border-black p-1 text-center">Akhir</th>
+                      <tr className="bg-gray-100 font-bold">
+                        <th className="border border-black p-2 text-center">Awal</th>
+                        <th className="border border-black p-2 text-center">Masuk</th>
+                        <th className="border border-black p-2 text-center">Keluar</th>
+                        <th className="border border-black p-2 text-center">Akhir</th>
                       </tr>
                     </thead>
                     <tbody>
                       {inventory.map((inv, idx) => {
-                        // Calculate stats for this specific item in the period
                         const totalMasuk = filteredMasuk
                           .filter(bm => bm.kodeBarang === inv.kodeBarang)
                           .reduce((sum, current) => sum + current.jumlah, 0);
@@ -475,18 +482,18 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
 
                         return (
                           <tr key={inv.id}>
-                            <td className="border border-black p-1 text-center text-black">{idx + 1}</td>
-                            <td className="border border-black p-1 font-sans text-black">
+                            <td className="border border-black p-2 text-center text-black">{idx + 1}</td>
+                            <td className="border border-black p-2 text-black">
                               <div className="font-bold">{inv.namaBarang}</div>
                               <div className="text-[8px] font-mono opacity-60">{inv.kodeBarang}</div>
                             </td>
-                            <td className="border border-black p-1 text-center text-black">{inv.satuan}</td>
-                            <td className="border border-black p-1 text-center text-black font-medium">{stokAwal}</td>
-                            <td className="border border-black p-1 text-center text-emerald-600 font-medium">+{totalMasuk}</td>
-                            <td className="border border-black p-1 text-center text-rose-600 font-medium">-{totalKeluar}</td>
-                            <td className="border border-black p-1 text-center font-bold text-black">{inv.stok}</td>
-                            <td className="border border-black p-1 text-right text-black">{inv.hargaSatuan.toLocaleString('id-ID')}</td>
-                            <td className="border border-black p-1 text-right font-bold text-black">{(inv.stok * inv.hargaSatuan).toLocaleString('id-ID')}</td>
+                            <td className="border border-black p-2 text-center text-black">{inv.satuan}</td>
+                            <td className="border border-black p-2 text-center text-black font-medium">{stokAwal}</td>
+                            <td className="border border-black p-2 text-center text-emerald-700 font-bold">+{totalMasuk}</td>
+                            <td className="border border-black p-2 text-center text-red-700 font-bold">-{totalKeluar}</td>
+                            <td className="border border-black p-2 text-center font-bold text-black">{inv.stok}</td>
+                            <td className="border border-black p-2 text-right text-black">{inv.hargaSatuan.toLocaleString('id-ID')}</td>
+                            <td className="border border-black p-2 text-right font-bold text-black">{(inv.stok * inv.hargaSatuan).toLocaleString('id-ID')}</td>
                           </tr>
                         );
                       })}
@@ -497,31 +504,31 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
             )}
 
             {reportType === 'bmn_lengkap' && (
-              <table className="w-full border-collapse border border-black text-[11px] mb-8">
+              <table className="w-full border-collapse border border-black text-[10.5px] mb-8">
                 <thead>
-                  <tr className="bg-gray-100 font-bold font-sans">
-                    <th className="border border-black p-1 text-center w-8">No</th>
-                    <th className="border border-black p-1 text-center">Kode Barang</th>
-                    <th className="border border-black p-1 text-center">NUP</th>
-                    <th className="border border-black p-1 text-left">Nama Barang</th>
-                    <th className="border border-black p-1 text-center">Tahun</th>
-                    <th className="border border-black p-1 text-center">Kondisi</th>
-                    <th className="border border-black p-1 text-right">Nilai Perolehan</th>
+                  <tr className="bg-gray-100 font-bold">
+                    <th className="border border-black p-2 text-center w-8">No</th>
+                    <th className="border border-black p-2 text-center">Kode Barang</th>
+                    <th className="border border-black p-2 text-center">NUP</th>
+                    <th className="border border-black p-2 text-left">Nama Barang</th>
+                    <th className="border border-black p-2 text-center">Tahun</th>
+                    <th className="border border-black p-2 text-center">Kondisi</th>
+                    <th className="border border-black p-2 text-right">Nilai Perolehan</th>
                   </tr>
                 </thead>
                 <tbody>
                   {bmnList.map((bmn, idx) => (
                     <tr key={bmn.id}>
-                      <td className="border border-black p-1 text-center text-black">{idx + 1}</td>
-                      <td className="border border-black p-1 text-center font-mono text-black">{bmn.kodeBarang}</td>
-                      <td className="border border-black p-1 text-center font-mono font-bold text-black">{bmn.nup}</td>
-                      <td className="border border-black p-1 font-sans text-black">
-                        <div className="font-semibold">{bmn.namaBarang}</div>
-                        <div className="text-[10px] text-gray-600">{bmn.merkType}</div>
+                      <td className="border border-black p-2 text-center text-black">{idx + 1}</td>
+                      <td className="border border-black p-2 text-center font-mono text-black">{bmn.kodeBarang}</td>
+                      <td className="border border-black p-2 text-center font-mono font-bold text-black">{bmn.nup}</td>
+                      <td className="border border-black p-2 text-black">
+                        <div className="font-bold">{bmn.namaBarang}</div>
+                        <div className="text-[10px] text-gray-600 font-medium">{bmn.merkType}</div>
                       </td>
-                      <td className="border border-black p-1 text-center text-black">{bmn.tahunPerolehan}</td>
-                      <td className="border border-black p-1 text-center font-medium text-black">{bmn.kondisi}</td>
-                      <td className="border border-black p-1 text-right text-black">Rp {bmn.nilaiPerolehan.toLocaleString('id-ID')}</td>
+                      <td className="border border-black p-2 text-center text-black">{bmn.tahunPerolehan}</td>
+                      <td className="border border-black p-2 text-center font-bold text-black">{bmn.kondisi}</td>
+                      <td className="border border-black p-2 text-right text-black font-bold">Rp {bmn.nilaiPerolehan.toLocaleString('id-ID')}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -529,26 +536,26 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
             )}
 
             {reportType === 'bmn_mutasi' && (
-              <table className="w-full border-collapse border border-black text-[11px] mb-8">
+              <table className="w-full border-collapse border border-black text-[10.5px] mb-8">
                 <thead>
-                  <tr className="bg-gray-100 font-bold font-sans">
-                    <th className="border border-black p-1.5 text-center w-8">No</th>
-                    <th className="border border-black p-1.5 text-center">No. Mutasi</th>
-                    <th className="border border-black p-1.5 text-center">Jenis</th>
-                    <th className="border border-black p-1.5 text-left">Nama Barang (NUP)</th>
-                    <th className="border border-black p-1.5 text-left">Dari</th>
-                    <th className="border border-black p-1.5 text-left">Ke</th>
+                  <tr className="bg-gray-100 font-bold">
+                    <th className="border border-black p-2 text-center w-8">No</th>
+                    <th className="border border-black p-2 text-center">No. Mutasi</th>
+                    <th className="border border-black p-2 text-center">Jenis</th>
+                    <th className="border border-black p-2 text-left">Nama Barang (NUP)</th>
+                    <th className="border border-black p-2 text-left">Dari</th>
+                    <th className="border border-black p-2 text-left">Ke</th>
                   </tr>
                 </thead>
                 <tbody>
                   {mutasiBmnList.map((mut, idx) => (
                     <tr key={mut.id}>
-                      <td className="border border-black p-1.5 text-center text-black">{idx + 1}</td>
-                      <td className="border border-black p-1.5 text-center font-mono text-black">{mut.nomorMutasi}</td>
-                      <td className="border border-black p-1.5 text-center font-semibold text-black">{mut.jenisMutasi}</td>
-                      <td className="border border-black p-1.5 font-sans text-black">{mut.namaBarang} (NUP: {mut.nup})</td>
-                      <td className="border border-black p-1.5 text-black">{mut.dariPemegang}</td>
-                      <td className="border border-black p-1.5 text-black font-semibold">{mut.kePemegang}</td>
+                      <td className="border border-black p-2 text-center text-black">{idx + 1}</td>
+                      <td className="border border-black p-2 text-center font-mono text-black">{mut.nomorMutasi}</td>
+                      <td className="border border-black p-2 text-center font-bold text-black">{mut.jenisMutasi}</td>
+                      <td className="border border-black p-2 text-black font-bold">{mut.namaBarang} (NUP: {mut.nup})</td>
+                      <td className="border border-black p-2 text-black italic">{mut.dariPemegang}</td>
+                      <td className="border border-black p-2 text-black font-bold">{mut.kePemegang}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -556,26 +563,26 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
             )}
 
             {reportType === 'bmn_pemeliharaan' && (
-              <table className="w-full border-collapse border border-black text-[11px] mb-8">
+              <table className="w-full border-collapse border border-black text-[10.5px] mb-8">
                 <thead>
-                  <tr className="bg-gray-100 font-bold font-sans">
-                    <th className="border border-black p-1.5 text-center w-8">No</th>
-                    <th className="border border-black p-1.5 text-center">No. Tiket</th>
-                    <th className="border border-black p-1.5 text-left">Nama Pemohon</th>
-                    <th className="border border-black p-1.5 text-left">Barang BMN</th>
-                    <th className="border border-black p-1.5 text-center">Status</th>
-                    <th className="border border-black p-1.5 text-right">Biaya</th>
+                  <tr className="bg-gray-100 font-bold">
+                    <th className="border border-black p-2 text-center w-8">No</th>
+                    <th className="border border-black p-2 text-center">No. Tiket</th>
+                    <th className="border border-black p-2 text-left">Nama Pemohon</th>
+                    <th className="border border-black p-2 text-left">Barang BMN</th>
+                    <th className="border border-black p-2 text-center">Status</th>
+                    <th className="border border-black p-2 text-right">Biaya</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pemeliharaanList.map((mtn, idx) => (
                     <tr key={mtn.id}>
-                      <td className="border border-black p-1.5 text-center text-black">{idx + 1}</td>
-                      <td className="border border-black p-1.5 text-center font-mono text-black">{mtn.nomorTiket}</td>
-                      <td className="border border-black p-1.5 font-sans text-black">{mtn.namaPemohon}</td>
-                      <td className="border border-black p-1.5 text-black">{mtn.namaBarang} (NUP: {mtn.nup})</td>
-                      <td className="border border-black p-1.5 text-center font-bold uppercase text-black">{mtn.status}</td>
-                      <td className="border border-black p-1.5 text-right font-medium text-black">
+                      <td className="border border-black p-2 text-center text-black">{idx + 1}</td>
+                      <td className="border border-black p-2 text-center font-mono text-black">{mtn.nomorTiket}</td>
+                      <td className="border border-black p-2 text-black font-medium">{mtn.namaPemohon}</td>
+                      <td className="border border-black p-2 text-black font-bold">{mtn.namaBarang} (NUP: {mtn.nup})</td>
+                      <td className="border border-black p-2 text-center font-bold uppercase text-black">{mtn.status}</td>
+                      <td className="border border-black p-2 text-right font-bold text-black">
                         {mtn.biayaRealisasi ? `Rp ${mtn.biayaRealisasi.toLocaleString('id-ID')}` : '-'}
                       </td>
                     </tr>
@@ -584,68 +591,68 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
               </table>
             )}
 
-            {/* Lembar Tanda Tangan */}
-            <div className="mt-8 font-sans text-xs text-black">
-              <div className="text-right mb-4">
+            {/* Lembar Tanda Tangan - Proportional Tahoma Styling */}
+            <div className="mt-12 text-[11px] text-black">
+              <div className="text-right mb-6 px-4">
                 Jakarta, {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
 
               {(reportType === 'persediaan_masuk' || reportType === 'persediaan_keluar') && (
-                <div className="grid grid-cols-2 gap-8 text-center pt-2">
+                <div className="grid grid-cols-2 gap-12 text-center pt-4">
                   <div>
-                    <p className="font-semibold">Petugas Pengelola Gudang,</p>
-                    <div className="h-20"></div>
+                    <p className="font-bold">Petugas Pengelola Gudang,</p>
+                    <div className="h-24"></div>
                     <p className="font-bold underline">{pejabat.namaPetugasGudang}</p>
-                    <p className="text-[10px]">NIP. {pejabat.nipPetugasGudang}</p>
+                    <p className="text-[10px] mt-0.5 font-medium text-gray-700">NIP. {pejabat.nipPetugasGudang}</p>
                   </div>
                   <div>
-                    <p className="font-semibold">Verifikator SAKTI,</p>
-                    <div className="h-20"></div>
+                    <p className="font-bold">Verifikator SAKTI,</p>
+                    <div className="h-24"></div>
                     <p className="font-bold underline">{pejabat.namaVerifikatorSakti}</p>
-                    <p className="text-[10px]">NIP. {pejabat.nipVerifikatorSakti}</p>
+                    <p className="text-[10px] mt-0.5 font-medium text-gray-700">NIP. {pejabat.nipVerifikatorSakti}</p>
                   </div>
                 </div>
               )}
 
               {(reportType === 'stock_opname' || reportType === 'persediaan_bulanan') && (
-                <div className="space-y-8 pt-2">
-                  <div className="grid grid-cols-2 gap-8 text-center">
+                <div className="space-y-12 pt-4">
+                  <div className="grid grid-cols-2 gap-12 text-center">
                     <div>
-                      <p className="font-semibold">Petugas Pengelola Gudang,</p>
-                      <div className="h-16"></div>
+                      <p className="font-bold">Petugas Pengelola Gudang,</p>
+                      <div className="h-20"></div>
                       <p className="font-bold underline">{pejabat.namaPetugasGudang}</p>
-                      <p className="text-[10px]">NIP. {pejabat.nipPetugasGudang}</p>
+                      <p className="text-[10px] mt-0.5 font-medium text-gray-700">NIP. {pejabat.nipPetugasGudang}</p>
                     </div>
                     <div>
-                      <p className="font-semibold">Operator SAKTI,</p>
-                      <div className="h-16"></div>
+                      <p className="font-bold">Operator SAKTI,</p>
+                      <div className="h-20"></div>
                       <p className="font-bold underline">{pejabat.namaVerifikatorSakti}</p>
-                      <p className="text-[10px]">NIP. {pejabat.nipVerifikatorSakti}</p>
+                      <p className="text-[10px] mt-0.5 font-medium text-gray-700">NIP. {pejabat.nipVerifikatorSakti}</p>
                     </div>
                   </div>
-                  <div className="text-center w-full max-w-xs mx-auto pt-2">
-                    <p className="font-semibold">Mengetahui,</p>
-                    <p className="font-medium text-[11px]">Kepala Subbagian Tata Usaha</p>
-                    <div className="h-16"></div>
+                  <div className="text-center w-full max-w-sm mx-auto pt-4">
+                    <p className="font-bold">Mengetahui,</p>
+                    <p className="font-bold text-[11px]">Kepala Subbagian Tata Usaha</p>
+                    <div className="h-20"></div>
                     <p className="font-bold underline">{pejabat.namaKasubbagTu}</p>
-                    <p className="text-[10px]">NIP. {pejabat.nipKasubbagTu}</p>
+                    <p className="text-[10px] mt-0.5 font-medium text-gray-700">NIP. {pejabat.nipKasubbagTu}</p>
                   </div>
                 </div>
               )}
 
               {(reportType === 'bmn_lengkap' || reportType === 'bmn_mutasi' || reportType === 'bmn_pemeliharaan') && (
-                <div className="grid grid-cols-2 gap-8 text-center pt-2">
+                <div className="grid grid-cols-2 gap-12 text-center pt-4">
                   <div>
-                    <p className="font-semibold">Petugas BMN,</p>
-                    <div className="h-20"></div>
+                    <p className="font-bold">Petugas BMN,</p>
+                    <div className="h-24"></div>
                     <p className="font-bold underline">{pejabat.namaPetugasBmn}</p>
-                    <p className="text-[10px]">NIP. {pejabat.nipPetugasBmn}</p>
+                    <p className="text-[10px] mt-0.5 font-medium text-gray-700">NIP. {pejabat.nipPetugasBmn}</p>
                   </div>
                   <div>
-                    <p className="font-semibold">Kepala Subbagian Tata Usaha,</p>
-                    <div className="h-20"></div>
+                    <p className="font-bold">Kepala Subbagian Tata Usaha,</p>
+                    <div className="h-24"></div>
                     <p className="font-bold underline">{pejabat.namaKasubbagTu}</p>
-                    <p className="text-[10px]">NIP. {pejabat.nipKasubbagTu}</p>
+                    <p className="text-[10px] mt-0.5 font-medium text-gray-700">NIP. {pejabat.nipKasubbagTu}</p>
                   </div>
                 </div>
               )}
