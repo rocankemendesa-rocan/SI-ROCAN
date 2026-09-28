@@ -43,7 +43,9 @@ const KanbanCard: React.FC<{
       <div className={`p-2.5 rounded-lg border text-[11px] italic ${theme === 'dark' ? 'bg-[#070e22] border-[#1b2d56] text-ink-soft' : 'bg-slate-50 border-slate-100 text-slate-600'}`}>"{disposisi.instruksi}"</div>
       <div className="pt-3 border-t flex items-center justify-between gap-2 border-slate-50">
         <div className="flex items-center gap-1.5 overflow-hidden">
-          <div className="w-6 h-6 rounded-full bg-indigo-600/30 flex items-center justify-center text-[10px] font-bold text-indigo-400 shrink-0">{disposisi.kepada[0]}</div>
+          <div className="w-6 h-6 rounded-full bg-indigo-600/30 flex items-center justify-center text-[10px] font-bold text-indigo-400 shrink-0">
+            {disposisi.kepada ? disposisi.kepada[0] : '?'}
+          </div>
           <span className="text-[10px] font-medium truncate text-ink-soft">{disposisi.kepada}</span>
         </div>
         <div className="flex items-center gap-1">
@@ -87,8 +89,8 @@ const DisposisiMonitorView: React.FC = () => {
   const [tindakLanjutData, setTindakLanjutData] = useState({ catatan: '', dokumen: '' });
 
   const filteredDisposisi = React.useMemo(() => {
-    return currentUser.role === 'staf' || currentUser.role === 'pegawai'
-      ? disposisiList.filter(d => (d.kepada || '').toLowerCase().includes((currentUser.name || '').toLowerCase().split(',')[0]))
+    return currentUser.role === 'pegawai'
+      ? disposisiList.filter(d => (d.kepada || '').toLowerCase().includes((currentUser.name || '').toLowerCase().split(',')[0].trim()))
       : disposisiList;
   }, [disposisiList, currentUser]);
 
@@ -176,7 +178,7 @@ const DisposisiMonitorView: React.FC = () => {
                   <label className="text-xs font-bold text-ink-soft uppercase">Kepada</label>
                   <select required className={`w-full border rounded-xl px-4 py-2.5 text-sm focus:outline-none ${themeClasses.input}`} value={formData.kepada} onChange={(e) => setFormData({ ...formData, kepada: e.target.value })}>
                     <option value="">-- Pilih Staf --</option>
-                    {users.filter(u => ['staf', 'pegawai', 'ka_bagian', 'ka_biro'].includes(u.role)).map(u => <option key={u.id} value={u.name}>{u.name}</option>)}
+                    {users.filter(u => ['pegawai', 'ka_bagian', 'ka_biro', 'kasubbag_tu', 'petugas_arsip'].includes(u.role)).map(u => <option key={u.id} value={u.name}>{u.name}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">

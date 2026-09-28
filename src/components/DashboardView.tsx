@@ -156,7 +156,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
           </div>
           <div>
             <h1 className="text-3xl font-black text-ink tracking-tight">SI - ROCAN</h1>
-            <p className="text-[11px] font-bold text-ink-soft uppercase tracking-[0.2em] mt-1">KEMENTERIAN DESA DAN PEMBANGUNAN DAERAH TERTINGGAL</p>
+            <p className="text-[11px] font-bold text-ink-soft uppercase tracking-[0.2em] mt-1">KEMENTERIAN DESA DAN PEMBANGUNAN DAERAH TERTINGGAL REPUBLIK INDONESIA</p>
           </div>
         </div>
       </div>

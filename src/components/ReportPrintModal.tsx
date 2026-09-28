@@ -271,7 +271,7 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
             {/* Kop Surat Resmi */}
             <div className="relative flex items-center justify-center pb-1">
               <div className="absolute left-0">
-                <img src="/logo_kemendes.jpg" alt="Logo Kemendes" className="w-[90px] h-[90px] object-contain" />
+                <img src="/logo_official.jpg" alt="Logo Kemendes" className="w-[90px] h-[90px] object-contain" />
               </div>
               <div className="text-center px-4">
                 <h2 className="text-[13.5px] font-medium tracking-normal font-sans text-black leading-snug">
