@@ -148,6 +148,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
+      {/* Brand Identity Header */}
+      <div className="flex items-center justify-between gap-6 pb-2">
+        <div className="flex items-center gap-6">
+          <div className="p-3 bg-white border border-slate-200 rounded-2xl shadow-sm">
+            <img src="/logo_official.jpg" alt="Kemendes Logo" className="w-14 h-14 object-contain" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-black text-ink tracking-tight">SI - ROCAN</h1>
+            <p className="text-[11px] font-bold text-ink-soft uppercase tracking-[0.2em] mt-1">KEMENTERIAN DESA DAN PEMBANGUNAN DAERAH TERTINGGAL</p>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Banner Section */}
       <div className="relative overflow-hidden rounded-3xl p-8 lg:p-12 bg-ink text-white">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-600/20 to-transparent pointer-events-none" />
@@ -205,7 +218,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, onOpen
             icon={<PackagePlus className="w-5 h-5" />} 
             onClick={() => onNavigate('persediaan_masuk')}
             color="emerald"
-            style={{ width: '600px' }}
           />
           <ShortcutCard 
             label="Barang Keluar" 

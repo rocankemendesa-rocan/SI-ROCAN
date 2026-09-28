@@ -119,6 +119,9 @@ interface AppContextType {
   updateDisposisiStatus: (id: string, status: Disposisi['status'], catatan?: string, dokumen?: string) => void;
   addKegiatan: (kegiatan: Omit<Kegiatan, 'id'>) => void;
 
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
+
   // Global helper
   resetData: () => void;
   resetDataToDefault: () => void;
@@ -154,6 +157,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   // Initialize Firestore listeners
   useEffect(() => {
@@ -675,6 +679,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addDisposisi,
         updateDisposisiStatus,
         addKegiatan,
+        theme,
+        setTheme,
         resetData,
         resetDataToDefault: resetData,
       }}

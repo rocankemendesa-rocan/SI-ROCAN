@@ -13,14 +13,13 @@ export const KemendesLogo: React.FC<KemendesLogoProps> = ({
 }) => {
   return (
     <div className={`inline-flex items-center gap-4 ${className}`}>
-      <div className="relative">
-        <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="relative flex items-center justify-center">
         <img
-          src="/logo_official.png"
+          src="/logo_official.jpg"
           alt="Logo Kemendes"
           width={size}
           height={size}
-          className="relative shrink-0 drop-shadow-lg object-contain rounded-full"
+          className="relative shrink-0 object-contain"
           referrerPolicy="no-referrer"
         />
       </div>

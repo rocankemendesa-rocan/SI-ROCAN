@@ -269,24 +269,27 @@ export const ReportPrintModal: React.FC<ReportPrintModalProps> = ({
             className="w-full max-w-4xl bg-white text-black p-8 md:p-12 shadow-2xl rounded-sm font-serif print:p-0 print:shadow-none print:w-full print:max-w-none text-xs leading-relaxed"
           >
             {/* Kop Surat Resmi */}
-            <div className="flex items-center justify-between border-b-4 border-double border-black pb-3 mb-6">
-              <KemendesLogo size={74} />
-              <div className="flex-1 text-center px-4">
-                <h2 className="text-sm font-bold tracking-wider uppercase font-sans text-black">
-                  KEMENTERIAN DESA DAN PEMBANGUNAN DAERAH TERTINGGAL
+            <div className="relative flex items-center justify-center pb-1">
+              <div className="absolute left-0">
+                <img src="/logo_kemendes.jpg" alt="Logo Kemendes" className="w-[90px] h-[90px] object-contain" />
+              </div>
+              <div className="text-center px-4">
+                <h2 className="text-[13.5px] font-medium tracking-normal font-sans text-black leading-snug">
+                  KEMENTERIAN DESA DAN PEMBANGUNAN DAERAH TERTINGGAL REPUBLIK INDONESIA
                 </h2>
-                <h1 className="text-base font-extrabold uppercase tracking-wide font-sans mt-0.5 text-black">
-                  BIRO PERENCANAAN DAN KERJA SAMA
+                <h1 className="text-[17px] font-bold uppercase tracking-normal font-sans text-black leading-snug">
+                  SEKRETARIAT JENDERAL
                 </h1>
-                <p className="text-[10px] font-sans text-gray-700 mt-1">
-                  Jalan TMP Kalibata No. 17, Jakarta Selatan 12750 | Telepon: (021) 7989872 | Faksimile: (021) 7989873
+                <p className="text-[10.5px] font-sans text-black leading-snug mt-0.5">
+                  Jalan TMP. Kalibata Nomor 17 Jakarta Selatan 12750 Telepon 021 – 7989925
                 </p>
-                <p className="text-[10px] font-sans text-gray-700">
-                  Laman: kemendesa.go.id | Pos-el: rocan@kemendesa.go.id
+                <p className="text-[10.5px] font-sans text-blue-700 underline leading-snug">
+                  www.kemendesa.go.id
                 </p>
               </div>
-              <div className="w-[74px]"></div>
             </div>
+            <div className="border-b-[2.5px] border-black mt-1"></div>
+            <div className="border-b border-black mt-[1.5px] mb-6"></div>
 
             {/* Judul Laporan */}
             <div className="text-center mb-6 font-sans">

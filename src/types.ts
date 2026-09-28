@@ -197,6 +197,8 @@ export interface MutasiBmnRecord {
   disetujuiPetugasBmn?: string;
   disetujuiKasubbagTu?: string;
   catatan?: string;
+  nipPemegang?: string;
+  petugasBmn?: string;
 }
 
 export interface PemeliharaanBmnRecord {
